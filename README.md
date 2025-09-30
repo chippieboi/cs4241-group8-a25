@@ -1,5 +1,5 @@
 # Final Project
-Michael Lin, Breanna Lee
+Michael Lin, Breanna Lee, Tiffany Semexant
 [Example Projects from D24](https://echo360.org/collection/35d9eb4e-1c44-4880-80b5-c7a2f04ba64c/public)
 
 [Example Projects from A23](https://echo360.org/collection/50a4d343-caea-4deb-93ee-61bdd7da543f/public)
