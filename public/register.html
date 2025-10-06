@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<head>
+    <title>Register</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="register-container">
+        <h2>Register</h2>
+        <form id="registerForm" action="/register" method="POST">
+            <label for="username" name = "username">Username:</label>
+            <input type="text" id="username" name="username" required>
+            <label for="password" name = "password">Password:</label>
+            <input type="password" id="password" name="password" required>
+            <button type="submit">Register</button>
+        </form>
+        <p id="errorMessage" class="error-message"></p>
+    </div>
+</body>
+</html>

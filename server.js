@@ -8,8 +8,11 @@ const express = require('express'),
   bcrypt = require('bcrypt'),
   saltRounds = 10
 require('dotenv').config()
+const jwt = require("jsonwebtoken");
+const cookieParser = require('cookie-parser');
 
 const { MongoClient, ServerApiVersion } = require('mongodb')
+const TOKENKEY = "ThisIsASecretTokenKey"
 
 const uri = process.env.MONGO_URI
 const client = new MongoClient(uri, {
@@ -39,30 +42,102 @@ async function initDB() {
 initDB()
 
 app.use(express.json())
-app.use(express.static(dir))
+app.use(cookieParser());
+app.use(express.urlencoded({ extended: true }))
+app.use(express.static(dir, { index: false }))
 
-app.get('/', (req, res) => {
+function authenticateToken(req, res, next) {
+  const token = req.cookies?.token;
+  if (!token) return res.redirect('/login');
+
+  jwt.verify(token, TOKENKEY, (err, user) => {
+    if (err) return res.redirect('/login');
+    req.user = user;
+    next();
+  });
+}
+
+app.get('/', authenticateToken, (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'))
 })
 
-app.post('/login', async(req, res) => {
-  const {username, password} = req.body
-
-  let user = await usersCollection.findOne({username})
-
-  if (!user) {
-    const hash = await bcrypt.hash(password, saltRounds)
-    await usersCollection.insertOne({username, password: hash})
-
-    return res.status(200).json({"message": "Account successfully created and logged in."})
-  }
-
-  const match = await bcrypt.compare(password, user.password)
-  if (!match) {
-    return res.status(400).json({"message": "Incorrect credentials."})
-  }
-
-  return res.status(200).json({"message": ""})
+app.get('/login', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'login.html'))
 })
 
-app.listen(process.env.PORT || port )
+app.post('/login', async (req, res) => {
+  const { username, password } = req.body;
+
+  if (!username || !password) {
+    return res.status(400).json({ error: "Username and password are required" });
+  }
+
+  try {
+    const user = await usersCollection.findOne({ username });
+
+    if (!user) {
+      return res.status(400).json({ error: "Invalid username or password" });
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+
+    if (!isPasswordValid) {
+      return res.status(400).json({ error: "Invalid username or password" });
+    }
+
+    const token = jwt.sign({ username: user.username }, TOKENKEY, { expiresIn: '1h' });
+    res.cookie('token', token, { httpOnly: true, path: '/' });
+    return res.redirect('/');
+  } catch (err) {
+    console.error("Login error: ", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+})
+
+app.get('/register', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'register.html'))
+})
+
+app.post('/register', async (req, res) => {
+  const { username, password } = req.body;
+
+  if (!username || !password) {
+    return res.status(400).json({ error: "Username and password are required" });
+  }
+
+  try {
+    const existingUser = await usersCollection.findOne({ username });
+
+    if (existingUser) {
+      return res.status(400).json({ error: "Username already exists" });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    await usersCollection.insertOne({ username, password: hashedPassword });
+
+    res.status(201).json({ message: "User registered successfully" });
+    return res.redirect('/login');
+  } catch (err) {
+    console.error("Registration error: ", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+})
+
+app.post('/logout', (req, res) => {
+  res.clearCookie('token', { path: '/' });
+  res.redirect('/login');
+})
+async function startServer() {
+  const maxWaitMs = 3000
+  const start = Date.now()
+  while ((!usersCollection || !animalsCollection || !historyCollection) && Date.now() - start < maxWaitMs) {
+    await new Promise(r => setTimeout(r, 100))
+  }
+
+  app.listen(process.env.PORT || port, () => {
+    console.log(`Server listening on port ${process.env.PORT || port}`)
+  })
+}
+
+startServer()
