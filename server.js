@@ -140,4 +140,30 @@ async function startServer() {
   })
 }
 
+/*
+/create animal
+/edit animal      - edit animal
+/view history     - show history for the user (as opposed to animal specific)
+/race             - handle selecting other users' animals to race against, calculating who wins, displaying race info
+                  - insert related info into history table, update animal table (maybe user table if user also tracks total wins)
+/view animals     - show all animals of a given user
+/leaderboard      - show the users with the most wins
+
+
+animal table:
+name - animal type - speed - stamina - agility - dexterity - wins - user
+
+history table:
+animalid - win? - race title - user
+
+race info:  some flavor text that we generate based on the random numbers
+
+race gen:
+generate random number 1-2 for each of the 4 stats
+multiply final number by rng(0.9,1.1) inclusive
+
+start with user can't see the race, just click a button and call /race,
+- can add seeing the race functionality later
+*/
+
 startServer()
