@@ -14,7 +14,15 @@
     </form>
     <h2>Your Animals</h2>
     <table id="animalsTable">
-        <thead><tr><th>Name</th><th>Speed</th><th>Stamina</th><th>Agility</th><th>Dexterity</th></tr></thead>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Speed</th>
+                <th>Stamina</th>
+                <th>Agility</th>
+                <th>Dexterity</th>
+            </tr>
+        </thead>
         <tbody></tbody>
     </table>
 
@@ -23,35 +31,38 @@
     <form id="createForm" onsubmit="createAnimal(event)">
         <input name="name" placeholder="Name" required>
         <select name="type">
-            <option>Kangaroo</option><option>Horse</option><option>Penguin</option><option>Pig</option>
+            <option>Kangaroo</option>
+            <option>Horse</option>
+            <option>Penguin</option>
+            <option>Pig</option>
         </select>
 
-    <div>
-      <div class="stat-row">
-          <label>Speed</label>
-          <input type="number" name="speed" min="1" max="30" value="10" onchange="recalcPoints()" required>
-        </div>
-        <div class="stat-row">
-          <label>Stamina</label>
-          <input type="number" name="stamina" min="1" max="30" value="10" onchange="recalcPoints()" required>
-        </div>
-        <div class="stat-row">
-          <label>Agility</label>
-          <input type="number" name="agility" min="1" max="30" value="10" onchange="recalcPoints()" required>
-        </div>
-        <div class="stat-row">
-          <label>Strength</label>
-          <input type="number" name="strength" min="1" max="30" value="10" onchange="recalcPoints()" required>
-        </div>
-        <div class="stat-row">
-          <label>Luck</label>
-          <input type="number" name="luck" min="1" max="30" value="10" onchange="recalcPoints()" required>
-        </div>  
-
         <div>
-            <button type="submit">Create Animal</button>
-        </div>
-        <div id="createError"></div>
+            <div class="stat-row">
+                <label>Speed</label>
+                <input type="number" name="speed" min="1" max="30" value="10" onchange="recalcPoints()" required>
+            </div>
+            <div class="stat-row">
+                <label>Stamina</label>
+                <input type="number" name="stamina" min="1" max="30" value="10" onchange="recalcPoints()" required>
+            </div>
+            <div class="stat-row">
+                <label>Agility</label>
+                <input type="number" name="agility" min="1" max="30" value="10" onchange="recalcPoints()" required>
+            </div>
+            <div class="stat-row">
+                <label>Strength</label>
+                <input type="number" name="strength" min="1" max="30" value="10" onchange="recalcPoints()" required>
+            </div>
+            <div class="stat-row">
+                <label>Luck</label>
+                <input type="number" name="luck" min="1" max="30" value="10" onchange="recalcPoints()" required>
+            </div>
+
+            <div>
+                <button type="submit">Create Animal</button>
+            </div>
+            <div id="createError"></div>
     </form>
 
     <h3>Race Your Animal</h3>
@@ -63,19 +74,34 @@
 
     <h2>Race Results</h2>
     <table id="resultsTable">
-        <thead><tr><th>Place</th><th>Name</th><th>Type</th><th>Score</th></tr></thead>
+        <thead>
+            <tr>
+                <th>Place</th>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Score</th>
+            </tr>
+        </thead>
         <tbody></tbody>
     </table>
     </div>
 
     <h2>History</h2>
     <table id="historyLog">
-      <tbody></tbody>
+        <tbody></tbody>
     </table>
 
     <h2>Leaderboard</h2>
     <table id="leaderboardTable">
-        <thead><tr><th>Name</th><th>Type</th><th>Wins</th></tr></thead>
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Gold</th>
+                <th>Silver</th>
+                <th>Bronze</th>
+            </tr>
+        </thead>
+        <tbody id="leaderboard-entries"></tbody>
     </table>
     <script src="main.js"></script>
 </body>

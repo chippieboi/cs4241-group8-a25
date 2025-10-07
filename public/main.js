@@ -112,6 +112,14 @@ function showResults(data){
             </tr>`;
         });
 }
+
+const leaderboard = async function(event) {
+    const response = await fetch("/leaderboard")
+
+    const leaderboard = await response.json()
+    const entries = document.getElementById("leaderboard").getElementById("entries")[0]
+    entries.innerHTML = ""
+}
 /*
 /create animal
 /edit animal      - edit animal
