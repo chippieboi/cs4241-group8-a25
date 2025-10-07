@@ -149,12 +149,15 @@ async function startServer() {
 /view animals     - show all animals of a given user
 /leaderboard      - show the users with the most wins
 
+animal types:
+horse,      cat,       dog,      kangaroo
++5speed, +5agility, +5stamina, +5dexterity
 
 animal table:
 name - animal type - speed - stamina - agility - dexterity - wins - user
 
 history table:
-animalid - win? - race title - user
+animal - position - race title - user
 
 race info:  some flavor text that we generate based on the random numbers
 
