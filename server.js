@@ -156,6 +156,21 @@ app.post("/leaderboard", async (req, res) => {
   }
 })
 
+app.get("/viewHistory", authenticateToken, async (req, res) => {
+  const user = await usersCollection.findOne({ username: req.user.username })
+  const animals = await animalsCollection.find({username: user.username}).toArray()
+  let animalHistory = []
+  for (let animal of animals) {
+    animalHistory = await historyCollection.find({$or: [
+      {first: animal._id},
+      {second: animal._id},
+      {third: animal._id},
+      {fourth: animal._id}
+    ]}).toArray()  
+  }
+  res.json(animalHistory)
+})
+
 async function startServer() {
   const maxWaitMs = 3000
   const start = Date.now()
