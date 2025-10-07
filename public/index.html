@@ -11,7 +11,20 @@
 <body>
     <form id="logoutForm" action="/logout" method="POST">
         <button type="submit">Logout</button>
-        </form>
+    </form>
+
+    <h1>Leaderboard</h1>
+    <table id="leaderboard">
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Gold</th>
+                <th>Silver</th>
+                <th>Bronze</th>
+            </tr>
+        </thead>
+        <tbody id="leaderboard-entries"></tbody>
+    </table>
     <!-- 
         all different forms
 

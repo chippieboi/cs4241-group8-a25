@@ -128,6 +128,34 @@ app.post('/logout', (req, res) => {
   res.clearCookie('token', { path: '/' });
   res.redirect('/login');
 })
+
+app.post("/leaderboard", async (req, res) => {
+  try {
+    const leaderboard = await animalsCollection.aggregate([
+      {
+        $group: {
+          username: "username",
+          totalGold: {$sum: {$toInt: "$gold"}},
+          totalSilver: {$sum: {$toInt: "$silver"}},
+          totalBronze: {$sum: {$toInt: "$bronze"}}
+        }
+      },
+      {
+        $sort: {
+          totalGold: -1,
+          totalSilver: -1,
+          totalBronze: -1
+        }
+      }
+    ]).toArray()
+
+    res.json(leaderboard)
+  } catch (err) {
+    console.error("Leaderboard error: ", err)
+    res.status(500).json({error: "Internal server error."})
+  }
+})
+
 async function startServer() {
   const maxWaitMs = 3000
   const start = Date.now()
