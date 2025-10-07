@@ -153,6 +153,8 @@ animal types:
 horse,      cat,       dog,      kangaroo
 +5speed, +5agility, +5stamina, +5dexterity
 
+attributes add up to 30
+
 animal table:
 name - animal type - speed - stamina - agility - dexterity - wins - user
 
