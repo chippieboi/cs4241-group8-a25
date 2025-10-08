@@ -120,6 +120,57 @@ const leaderboard = async function(event) {
     const entries = document.getElementById("leaderboard").getElementById("entries")[0]
     entries.innerHTML = ""
 }
+
+async function startRace(event) {
+    event.preventDefault();
+
+    const select = document.getElementById("raceSelect");
+    const animalId = select.value;
+
+    if(!animalId) {
+        alert("please select an animal to race!");
+        return;
+    }
+
+    try{
+        const res = await fetch("/race", {
+            method:"POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({animalId})
+        });
+        const data = await res.json();
+
+        if(!res.ok) {
+            alert(data.error || "failed to start race");
+            return;
+        }
+
+        const tbody = document.querySelector("#resultsTable tbody");
+        tbody.innerHTML = "";
+
+        data.results.forEach(r => {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+                <td>${r.place}</td>
+                <td>${r.name}</td>
+                <td>${r.username}</td>
+                <td>${r.score}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+
+        const raceTitleE1 = document.createElement("h3");
+        raceTitleE1.textContent = `${data.title}`;
+        document.body.insertBefore(raceTitleE1, document.querySelector("#resultsTable"));
+
+        console.log("Race results:", data);
+
+    } catch (err) {
+        console.error("error starting race:", err);
+    }
+
+    
+}
 /*
 /create animal
 /edit animal      - edit animal
