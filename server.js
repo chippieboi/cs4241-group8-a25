@@ -116,7 +116,7 @@ app.post('/register', async (req, res) => {
 
     await usersCollection.insertOne({ username, password: hashedPassword });
 
-    res.status(201).json({ message: "User registered successfully" });
+    //res.status(201).json({ message: "User registered successfully" });
     return res.redirect('/login');
   } catch (err) {
     console.error("Registration error: ", err);
@@ -170,6 +170,106 @@ app.get("/viewHistory", authenticateToken, async (req, res) => {
   }
   res.json(animalHistory)
 })
+
+app.get("/race", authenticateToken, async (req, res) => {
+  try{
+    const { animalId } = req.body;
+
+  const userAnimal = await animalsCollection.findOne({_id: animalId});
+  if(!userAnimal){
+    return res.status(400).json({error: "Animal not found"});
+  }
+
+  const user = await usersCollection.findOne({username: req.user.username});
+  const username = user.username
+
+  const opponents = await animalsCollection.aggregate([
+    {$match: {username: {$ne: username}}},
+    {$sample: {size: 4}}
+  ]).toArray();
+
+  const racers = [userAnimal, ...opponents];
+
+  const result = simulateRace(racers);
+
+  await updateMedals(db, result);
+
+  const raceDoc = {
+    title: "testTitle",
+    first: result[0]._id,
+    second: result[1]._id,
+    third: result[2]._id,
+    fourth: result[3]._id,
+    fifth: result[4]._id,
+  }
+
+  await historyCollection.insertOne(raceDoc);
+
+  res.json({
+    title: "test Title",
+    result: result.map((r, i) => ({
+      place: i + 1,
+      name: r.name,
+      username: r.username,
+      score: r.finalScore.toFixed(2)
+    }))
+  });
+  }catch (err){
+    res.status(500).json({error: "failed to start race"});
+  }
+  
+})
+
+async function updateMedals(db, results) {
+  const medals = ["gold", "silver", "bronze"];
+  for (let i = 0; i < results.length; i++) {
+    const update = {};
+    if (i < 3) update[`$inc`] = { [medals[i]]: 1};
+    await animalsCollection.updateOne({_id: results[i]._id}, update);
+  }
+}
+
+function simulateRace(racers) {
+  const modifiers = {
+    speed: 1 + Math.random(),
+    stamina: 1 + Math.random(),
+    agility: 1 + Math.random(),
+    dexterity: 1 + Math.random()
+  };
+
+  const sortedMods = Object.entries(modifiers).sort((a, b) => b[1] - a[1]);
+  const [highestStat, secondHighestStat] = [sortedMods[0][0], sortedMods[1][0]];
+
+  const title = generateRaceTitle(highestStat, secondHighestStat);
+  const results = racers.map(r => {
+    
+
+    const total = r.speed * modifiers.speed + r.stamina * modifiers.stamina +
+                  r.agility * modifiers.agility + r.dexterity * modifiers.dexterity;
+    const variance = 0.9 + Math.random() * 0.2;
+    const finalScore = total * variance;
+
+    return {...r, finalScore};
+  }).sort((a, b) => b.finalScore - a.finalScore);
+
+  return { results, title, modifiers};
+}
+
+function generateRaceTitle(highest, secondHighest) {
+  const titles = {
+    speed: ["Sprint", "Speedy"],
+    stamina: ["Decathalon", "Endurance"],
+    agility: ["Parkour", "Nimble"],
+    dexterity: ["Steeplechase", "Refined"],
+  };
+
+  const [main, secondary] = [
+    titles[highest]?.[0] || "unknown",
+    titles[secondHighest]?.[1] || "unknown"
+  ];
+
+  return `${secondary} ${main}`
+}
 
 async function startServer() {
   const maxWaitMs = 3000
