@@ -1,1 +1,36 @@
 /* do custom css */
+.main-row {
+    background-color: #007bff;        
+    color: white;                    
+    font-weight: 600;
+    cursor: pointer;       
+    border-radius: 8px;
+    transition: all 0.2s ease-in-out; 
+  }
+
+  .main-row:hover {
+    background-color: #0056b3; 
+    transform: scale(1.01);  
+  }
+  .main-row:active {
+    background-color: #004085;
+    transform: scale(0.98);
+  }
+    .main-row td {
+        padding: 15px 20px; 
+        border-bottom: 1px solid #ddd; 
+    }
+    .main-row:last-child td {
+        border-bottom: none; 
+    }
+
+    .detail-row {
+        background-color: #f9f9f9; 
+    }
+    .detail-row td {
+        padding: 15px 20px; 
+        border-bottom: 1px solid #ddd; 
+    }
+    .detail-row:last-child td {
+        border-bottom: none; 
+    }
