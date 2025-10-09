@@ -279,8 +279,8 @@ const viewHistory = async function(event) {
 
         const historyTable = document.createElement("table")
         historyTable.innerHTML = `
-        <tr><th>${record.title}</th></tr
-        <tr>
+        <tr class="main-row" style="cursor:pointer"><th colspan="4">${record.title}</th></tr>
+        <tr class="detail-row" style="display:none">
             <th>Rank</th>
             <th>Player name</th>
             <th>animal name</th>
@@ -296,7 +296,9 @@ const viewHistory = async function(event) {
 
         const first = await firstRes.json()
 
-        const firstEntry = document.createElement("tr")
+    const firstEntry = document.createElement("tr")
+    firstEntry.className = "detail-row"
+    firstEntry.style.display = 'none'
         firstEntry.innerHTML = `
         <td>1</td>
         <td>${first.username}</td>
@@ -313,7 +315,9 @@ const viewHistory = async function(event) {
 
         const second = await secondRes.json()
 
-        const secondEntry = document.createElement("tr")
+    const secondEntry = document.createElement("tr")
+    secondEntry.className = "detail-row"
+    secondEntry.style.display = 'none'
         secondEntry.innerHTML = `
         <td>2</td>
         <td>${second.username}</td>
@@ -330,7 +334,9 @@ const viewHistory = async function(event) {
 
         const third = await thirdRes.json()
 
-        const thirdEntry = document.createElement("tr")
+    const thirdEntry = document.createElement("tr")
+    thirdEntry.className = "detail-row"
+    thirdEntry.style.display = 'none'
         thirdEntry.innerHTML = `
         <td>3</td>
         <td>${third.username}</td>
@@ -347,7 +353,9 @@ const viewHistory = async function(event) {
 
         const fourth = await fourthRes.json()
 
-        const fourthEntry = document.createElement("tr")
+    const fourthEntry = document.createElement("tr")
+    fourthEntry.className = "detail-row"
+    fourthEntry.style.display = 'none'
         fourthEntry.innerHTML = `
         <td>4</td>
         <td>${fourth.username}</td>
@@ -364,7 +372,9 @@ const viewHistory = async function(event) {
 
         const fifth = await fifthRes.json()
 
-        const fifthEntry = document.createElement("tr")
+    const fifthEntry = document.createElement("tr")
+    fifthEntry.className = "detail-row"
+    fifthEntry.style.display = 'none'
         fifthEntry.innerHTML = `
         <td>5</td>
         <td>${fifth.username}</td>
@@ -415,3 +425,17 @@ window.onload = function () {
     loadAnimals()
     viewHistory()
 }
+
+// Delegated handler: toggle detail rows when a main-row is clicked
+document.getElementById('historyLog').addEventListener('click', (e) => {
+    const main = e.target.closest('.main-row')
+    if (!main) return
+    // find the table this main row belongs to
+    const table = main.closest('table')
+    if (!table) return
+    // toggle all .detail-row rows within this table
+    const details = table.querySelectorAll('.detail-row')
+    details.forEach(d => {
+        d.style.display = d.style.display === 'none' ? '' : 'none'
+    })
+})
