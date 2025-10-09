@@ -273,7 +273,8 @@ const viewHistory = async function(event) {
     const response = await fetch("/viewHistory")
 
     const history = await response.json()
-    const entries = document.getElementById("historyLog")
+    const entries = document.getElementById("historyLog");
+    entries.innerHTML ="";
     for (let record of history) {
 
         const historyTable = document.createElement("table")
