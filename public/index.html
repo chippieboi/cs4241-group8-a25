@@ -21,16 +21,17 @@
                 <th>Stamina</th>
                 <th>Agility</th>
                 <th>Dexterity</th>
+                <th>Actions</th>
             </tr>
         </thead>
-        <tbody></tbody>
+        <tbody id="animalList"></tbody>
     </table>
 
     <h3>Create New Animal</h3>
     <div>Total points available: <span id="pointTotal">30</span>. Remaining: <span id="pointsLeft">30</span></div>
     <form id="createForm" onsubmit="createAnimal(event)">
-        <input name="name" placeholder="Name" required>
-        <select name="type">
+        <input id="animalName" type="text" name="name" placeholder="Name" required>
+        <select id="animalType" name="type">
             <option>Horse</option>
             <option>Cat</option>
             <option>Dog</option>
@@ -40,23 +41,23 @@
         <div>
             <div class="stat-row">
                 <label>Speed</label>
-                <input type="number" name="speed" min="1" max="30" value="10" onchange="recalcPoints()" required>
+                <input id="speed" type="number" name="speed" min="1" max="30" placeholder="0" required>
             </div>
             <div class="stat-row">
                 <label>Stamina</label>
-                <input type="number" name="stamina" min="1" max="30" value="10" onchange="recalcPoints()" required>
+                <input id="stamina" type="number" name="stamina" min="1" max="30" placeholder="0" required>
             </div>
             <div class="stat-row">
                 <label>Agility</label>
-                <input type="number" name="agility" min="1" max="30" value="10" onchange="recalcPoints()" required>
+                <input id="agility" type="number" name="agility" min="1" max="30" placeholder="0" required>
             </div>
             <div class="stat-row">
                 <label>Dexterity</label>
-                <input type="number" name="strength" min="1" max="30" value="10" onchange="recalcPoints()" required>
+                <input id="dexterity" type="number" name="strength" min="1" max="30" placeholder="0" required>
             </div>
 
             <div>
-                <button type="submit">Create Animal</button>
+                <button id="createButton" type="submit">Create Animal</button>
             </div>
             <div id="createError"></div>
     </form>

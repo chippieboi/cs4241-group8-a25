@@ -1,3 +1,5 @@
+require('dotenv').config();
+console.log("MongoDB URI:", process.env.MONGO_URI); 
 const express = require('express'),
   fs = require('fs'),
   mime = require('mime'),
@@ -6,9 +8,7 @@ const express = require('express'),
   app = express(),
   path = require('path'),
   bcrypt = require('bcrypt'),
-  saltRounds = 10
-require('dotenv').config();
-console.log("MongoDB URI:", process.env.MONGO_URI); 
+  saltRounds = 10;
 const jwt = require("jsonwebtoken");
 const cookieParser = require('cookie-parser');
 
@@ -16,7 +16,7 @@ const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb')
 const TOKENKEY = "ThisIsASecretTokenKey"
 
 const uri = process.env.MONGO_URI;
-console.log("MongoDB URI:", process.env.MONGODB_URI);
+console.log("MongoDB URI:", process.env.MONGO_URI);
 const client = new MongoClient(uri, {
   serverApi: {
     version: ServerApiVersion.v1,
@@ -160,7 +160,7 @@ app.get("/leaderboard", async (req, res) => {
 
 app.get("/loadAnimals", authenticateToken, async (req, res) => {
   try {
-    const username = req.user?.username;
+    const username = req.user.username;
     if (!username) return res.status(401).json({error: "Not authenticated"})
 
     const animals = await animalsCollection.find({username}).toArray()
@@ -173,10 +173,12 @@ app.get("/loadAnimals", authenticateToken, async (req, res) => {
 
 app.post("/createAnimal", authenticateToken, async (req, res) => {
   try{
-    const { name, type } = req.body;
+    const { name, type , speed, stamina, agility, dexterity} = req.body;
+    if (!name || !type) return res.status(400).json({error: "Missing name or type"});
+
+    const stats = [speed, stamina, agility, dexterity].map(Number);
     const total = speed + stamina + agility + dexterity;
     if (total > 30) return res.status(400).json({ error: "Stat total exceeds 30 points"});
-    if (!name || !type) return res.status(400).json({error: "Missing name or type"});
 
     const username = req.user.username;
 
@@ -184,7 +186,10 @@ app.post("/createAnimal", authenticateToken, async (req, res) => {
       username,
       name,
       type,
-      stats: {speed, stamina, agility, dexterity},
+      speed: stats[0],
+      stamina: stats[1], 
+      agility: stats[2], 
+      dexterity: stats[3],
       wins: 0,
       gold: 0,
       silver: 0,
@@ -192,13 +197,55 @@ app.post("/createAnimal", authenticateToken, async (req, res) => {
     };
 
     const result = await animalsCollection.insertOne(animal);
-    animal._id = result.insertedId;
-    res.json({success: true, animal});
+    res.json({success: true, animal: {...animal, _id: result.insertedId}});
   } catch (err) {
     console.error("createAnimal error:", err);
     res.status(500).json({error: "Internal server error"});
   }
 });
+
+app.put("/editAnimal/:id", authenticateToken, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, type, speed, stamina, agility, dexterity } = req.body;
+
+    const total = speed + stamina + agility + dexterity;
+    if (total > 30) return res.status(400).json({ error: "Stat total exceeds 30 points" });
+
+    const username = req.user.username;
+
+    const result = await animalsCollection.findOneAndUpdate(
+      { _id: new ObjectId(id), username },
+      { $set: { name, type, speed, stamina, agility, dexterity } },
+      { returnDocument: "after" }
+    );
+
+    if (!result.value) return res.status(404).json({ error: "Animal not found" });
+    res.json({ success: true, animal: result.value });
+  } catch (err) {
+    console.error("editAnimal error:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+app.delete("/deleteAnimal/:id", authenticateToken, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const username = req.user.username;
+
+    const result = await animalsCollection.deleteOne({ _id: new ObjectId(id), username });
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ error: "Animal not found or not owned by user" });
+    }
+
+    res.json({ success: true, message: "Animal deleted successfully" });
+  } catch (err) {
+    console.error("deleteAnimal error:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+
 
 app.get("/viewHistory", authenticateToken, async (req, res) => {
   const user = await usersCollection.findOne({ username: req.user.username })
