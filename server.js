@@ -288,6 +288,31 @@ function generateRaceTitle(highest, secondHighest) {
   return `${secondary} ${main}`
 }
 
+app.post('/viewAnimal', authenticateToken, async (req, res) => {
+  const animalId = req.body.animalId
+  if (!animalId) {
+    return res.status(400).json({error: "Animal ID is required."})
+  }
+  try {
+    const _id = ObjectId.isValid(animalId) ? new ObjectId(animalId) : animalId
+    const animals = await animalsCollection.findOne({_id})
+    if (!animals) return res.status(404).json({ error: 'Animal not found' })
+    return res.json({
+      id: animals._id.toString(),
+      name: animals.name,
+      type: animals.type,
+      speed: animals.speed,
+      stamina: animals.stamina,
+      agility: animals.agility,
+      dexterity: animals.dexterity,
+      username: animals.username
+    })
+  } catch (err) {
+    console.error('viewAnimal error', err)
+    return res.status(500).json({ error: 'Internal server error' })
+  }
+})
+
 async function startServer() {
   const maxWaitMs = 3000
   const start = Date.now()

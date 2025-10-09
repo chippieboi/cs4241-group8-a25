@@ -176,6 +176,120 @@ async function startRace(event) {
 
     
 }
+
+const viewHistory = async function(event) {
+    const response = await fetch("/viewHistory")
+
+    const history = await response.json()
+    const entries = document.getElementById("historyLog")
+    for (let record of history) {
+
+        const historyTable = document.createElement("table")
+        historyTable.innerHTML = `
+        <tr>
+            <th>Rank</th>
+            <th>Title</th>
+            <th>Player name</th>
+            <th>animal name</th>
+            <th>animal type</th>
+        </tr>
+        `
+       
+        const firstRes = await fetch(`/viewAnimal`, {
+            method: "POST",
+            body: JSON.stringify({ animalId: record.first }),
+            headers: { 'Content-Type': 'application/json' }
+        })
+
+        const first = await firstRes.json()
+
+        const firstEntry = document.createElement("tr")
+        firstEntry.innerHTML = `
+        <td>1</td>
+        <td>${record.title}</td>
+        <td>${first.username}</td>
+        <td>${first.name}</td>
+        <td>${first.type}</td>
+        `
+        historyTable.appendChild(firstEntry)
+
+        const secondRes = await fetch(`/viewAnimal`, {
+            method: "POST",
+            body: JSON.stringify({ animalId: record.second }),
+            headers: { 'Content-Type': 'application/json' }
+        })
+
+        const second = await secondRes.json()
+
+        const secondEntry = document.createElement("tr")
+        secondEntry.innerHTML = `
+        <td>2</td>
+        <td>${record.title}</td>
+        <td>${second.username}</td>
+        <td>${second.name}</td>
+        <td>${second.type}</td>
+        `
+        historyTable.appendChild(secondEntry)
+
+        const thirdRes = await fetch(`/viewAnimal`, {
+            method: "POST",
+            body: JSON.stringify({ animalId: record.third }),
+            headers: { 'Content-Type': 'application/json' }
+        })
+
+        const third = await thirdRes.json()
+
+        const thirdEntry = document.createElement("tr")
+        thirdEntry.innerHTML = `
+        <td>3</td>
+        <td>${record.title}</td>
+        <td>${third.username}</td>
+        <td>${third.name}</td>
+        <td>${third.type}</td>
+        `
+        historyTable.appendChild(thirdEntry)
+
+        const fourthRes = await fetch(`/viewAnimal`, {
+            method: "POST",
+            body: JSON.stringify({ animalId: record.fourth }),
+            headers: { 'Content-Type': 'application/json' }
+        })
+
+        const fourth = await fourthRes.json()
+
+        const fourthEntry = document.createElement("tr")
+        fourthEntry.innerHTML = `
+        <td>4</td>
+        <td>${record.title}</td>
+        <td>${fourth.username}</td>
+        <td>${fourth.name}</td>
+        <td>${fourth.type}</td>
+        `
+        historyTable.appendChild(fourthEntry)
+
+        const fifthRes = await fetch(`/viewAnimal`, {
+            method: "POST",
+            body: JSON.stringify({ animalId: record.fifth }),
+            headers: { 'Content-Type': 'application/json' }
+        })
+
+        const fifth = await fifthRes.json()
+
+        const fifthEntry = document.createElement("tr")
+        fifthEntry.innerHTML = `
+        <td>5</td>
+        <td>${record.title}</td>
+        <td>${fifth.username}</td>
+        <td>${fifth.name}</td>
+        <td>${fifth.type}</td>
+        `
+        historyTable.appendChild(fifthEntry)
+
+
+        
+     entries.appendChild(historyTable)
+}
+}
 /*
 /create animal
 /edit animal      - edit animal
@@ -190,4 +304,5 @@ window.onload = function () {
     // document.getElementById("credentials").addEventListener("submit", login)
     loadLeaderboard()
     loadAnimals()
+    viewHistory()
 }
