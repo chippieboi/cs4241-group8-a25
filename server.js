@@ -7,14 +7,16 @@ const express = require('express'),
   path = require('path'),
   bcrypt = require('bcrypt'),
   saltRounds = 10
-require('dotenv').config()
+require('dotenv').config();
+console.log("MongoDB URI:", process.env.MONGO_URI); 
 const jwt = require("jsonwebtoken");
 const cookieParser = require('cookie-parser');
 
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb')
 const TOKENKEY = "ThisIsASecretTokenKey"
 
-const uri = process.env.MONGO_URI
+const uri = process.env.MONGO_URI;
+console.log("MongoDB URI:", process.env.MONGODB_URI);
 const client = new MongoClient(uri, {
   serverApi: {
     version: ServerApiVersion.v1,
@@ -155,6 +157,48 @@ app.get("/leaderboard", async (req, res) => {
     res.status(500).json({error: "Internal server error."})
   }
 })
+
+app.get("/loadAnimals", authenticateToken, async (req, res) => {
+  try {
+    const username = req.user?.username;
+    if (!username) return res.status(401).json({error: "Not authenticated"})
+
+    const animals = await animalsCollection.find({username}).toArray()
+    res.json(animals);
+  } catch (err) {
+    console.error("loadAnimals error:", err);
+    res.status(500).json({error: "Internal server error"});
+  }
+});
+
+app.post("/createAnimal", authenticateToken, async (req, res) => {
+  try{
+    const { name, type } = req.body;
+    const total = speed + stamina + agility + dexterity;
+    if (total > 30) return res.status(400).json({ error: "Stat total exceeds 30 points"});
+    if (!name || !type) return res.status(400).json({error: "Missing name or type"});
+
+    const username = req.user.username;
+
+    const animal = {
+      username,
+      name,
+      type,
+      stats: {speed, stamina, agility, dexterity},
+      wins: 0,
+      gold: 0,
+      silver: 0,
+      bronze: 0
+    };
+
+    const result = await animalsCollection.insertOne(animal);
+    animal._id = result.insertedId;
+    res.json({success: true, animal});
+  } catch (err) {
+    console.error("createAnimal error:", err);
+    res.status(500).json({error: "Internal server error"});
+  }
+});
 
 app.get("/viewHistory", authenticateToken, async (req, res) => {
   const user = await usersCollection.findOne({ username: req.user.username })

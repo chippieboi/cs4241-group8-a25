@@ -21,19 +21,28 @@ const login = async function (event) {
     if (data.message) {
         alert(data.message)
     }
+    alert("Login successful!");
+    window.location.href = "/";
 }
 
 async function loadAnimals() {
-    const response = await fetch(API + "/animals");
+    const response = await fetch(API + "/loadAnimals");
     const animals = await response.json();
+
     const tbody = document.querySelector("#animalsTable tbody");
     const select = document.getElementById("raceSelect");
     tbody.innerHTML = "";
     select.innerHTML = "";
+
     animals.forEach(a => {
+        const s = a.stats || {};
         tbody.innerHTML += `<tr>
-            <td>${a.name}</td><td>${a.type}</td><td>${a.speed}</td><td>${a.stamina}</td>
-            <td>${a.agility}</td><td>${a.dexterity}</td>
+            <td>${a.name}</td>
+            <td>${a.type}</td>
+            <td>${a.speed}</td>
+            <td>${a.stamina}</td>
+            <td>${a.agility}</td>
+            <td>${a.dexterity}</td>
         </tr>`;
         select.innerHTML += `<option value="${a._id}">${a.name} (${a.type})</option>`;
     })
@@ -67,11 +76,12 @@ function recalcPoints() {
     const st = + form.stamina.value;
     const a = + form.agility.value;
     const d = + form.dexterity.value;
-    const total = s + st + a + str + 1;
+    const total = s + st + a + d;
     const rem = 30 - total;
 
     document.getElementById("pointsLeft").innerText = remain;
     const error = document.getElementById("createError");
+
     if (remain < 0) {
         error.innerText = `Too many points allocated by ${-remain}. Reduce some statistics.`;
     } else {
@@ -86,7 +96,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 async function createAnimal(event) {
     event.preventDefault();
-    const form = e.target;
+    const form = event.target;
     const body = {
         name: form.name.value,
         type: form.type.value,
@@ -100,17 +110,19 @@ async function createAnimal(event) {
         document.getElementById("createError").innerText = `Total exceeds 30`;
         return;
     }
-    const response = await fetch(API + "/animals", {
+    const response = await fetch(API + "/createAnimals", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body)
+        body: JSON.stringify(body),
     });
+
     const data = await response.json;
+
     if (data.error) {
         document.getElementById("createError").innerText = data.error;
     } else {
         form.reset();
-        form.speed.value = form.stamina.value = form.agility.value = form.dexterity.value = 0;
+        //form.speed.value = form.stamina.value = form.agility.value = form.dexterity.value = 0;
         recalcPoints();
         loadAnimals();
     }
@@ -121,7 +133,10 @@ function showResults(data) {
     tbody.innerHTML = "";
     data.standings.forEach(s => {
         tbody.innerHTML += `<tr>
-                <td>${s.place}</td><td>${s.name}</td><td>${s.type}</td><td>${s.score}</td>
+                <td>${s.place}</td>
+                <td>${s.name}</td>
+                <td>${s.type}</td>
+                <td>${s.score}</td>
             </tr>`;
     });
 }
@@ -195,7 +210,7 @@ const viewHistory = async function(event) {
         </tr>
         `
        
-        const firstRes = await fetch(`/viewAnimal`, {
+        const firstRes = await fetch(`/loadAnimal`, {
             method: "POST",
             body: JSON.stringify({ animalId: record.first }),
             headers: { 'Content-Type': 'application/json' }
@@ -213,7 +228,7 @@ const viewHistory = async function(event) {
         `
         historyTable.appendChild(firstEntry)
 
-        const secondRes = await fetch(`/viewAnimal`, {
+        const secondRes = await fetch(`/loadAnimal`, {
             method: "POST",
             body: JSON.stringify({ animalId: record.second }),
             headers: { 'Content-Type': 'application/json' }
@@ -231,7 +246,7 @@ const viewHistory = async function(event) {
         `
         historyTable.appendChild(secondEntry)
 
-        const thirdRes = await fetch(`/viewAnimal`, {
+        const thirdRes = await fetch(`/loadAnimal`, {
             method: "POST",
             body: JSON.stringify({ animalId: record.third }),
             headers: { 'Content-Type': 'application/json' }
@@ -249,7 +264,7 @@ const viewHistory = async function(event) {
         `
         historyTable.appendChild(thirdEntry)
 
-        const fourthRes = await fetch(`/viewAnimal`, {
+        const fourthRes = await fetch(`/loadAnimal`, {
             method: "POST",
             body: JSON.stringify({ animalId: record.fourth }),
             headers: { 'Content-Type': 'application/json' }
@@ -267,7 +282,7 @@ const viewHistory = async function(event) {
         `
         historyTable.appendChild(fourthEntry)
 
-        const fifthRes = await fetch(`/viewAnimal`, {
+        const fifthRes = await fetch(`/loadAnimal`, {
             method: "POST",
             body: JSON.stringify({ animalId: record.fifth }),
             headers: { 'Content-Type': 'application/json' }
