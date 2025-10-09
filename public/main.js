@@ -265,7 +265,8 @@ async function startRace(event) {
         console.error("error starting race:", err);
     }
 
-    loadLeaderboard()
+    loadLeaderboard();
+    viewHistory();
 }
 
 const viewHistory = async function(event) {
