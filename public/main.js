@@ -35,7 +35,7 @@ async function loadAnimals() {
             <td>${a.name}</td><td>${a.type}</td><td>${a.speed}</td><td>${a.stamina}</td>
             <td>${a.agility}</td><td>${a.dexterity}</td>
         </tr>`;
-        select.innerHTML += `<option value="${a.id}">${a.name} (${a.type})</option>`;
+        select.innerHTML += `<option value="${a._id}">${a.name} (${a.type})</option>`;
     })
 }
 

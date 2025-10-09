@@ -11,7 +11,7 @@ require('dotenv').config()
 const jwt = require("jsonwebtoken");
 const cookieParser = require('cookie-parser');
 
-const { MongoClient, ServerApiVersion } = require('mongodb')
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb')
 const TOKENKEY = "ThisIsASecretTokenKey"
 
 const uri = process.env.MONGO_URI
@@ -171,61 +171,78 @@ app.get("/viewHistory", authenticateToken, async (req, res) => {
   res.json(animalHistory)
 })
 
-app.get("/race", authenticateToken, async (req, res) => {
+app.get("/animals", authenticateToken, async (req, res) => {
+  try {
+    const username = req.user.username;
+
+    const animals = await animalsCollection.find({username}).toArray();
+
+    res.json(animals);
+  } catch (err) {
+    console.error("error fetching ainmals");
+    res.status(500).json({error: "fetching animals error"});
+  }
+});
+
+app.post("/race", authenticateToken, async (req, res) => {
   try{
     const { animalId } = req.body;
 
-  const userAnimal = await animalsCollection.findOne({_id: animalId});
-  if(!userAnimal){
-    return res.status(400).json({error: "Animal not found"});
-  }
+    const userAnimal = await animalsCollection.findOne({_id: ObjectId.createFromHexString(animalId)});
+    if(!userAnimal){
+      return res.status(400).json({error: "Animal not found"});
+    }
 
-  const user = await usersCollection.findOne({username: req.user.username});
-  const username = user.username
+    const user = await usersCollection.findOne({username: req.user.username});
+    const username = user.username
 
-  const opponents = await animalsCollection.aggregate([
-    {$match: {username: {$ne: username}}},
-    {$sample: {size: 4}}
-  ]).toArray();
+    const opponents = await animalsCollection.aggregate([
+      {$match: {username: {$ne: username}, _id: {$ne: ObjectId.createFromHexString(animalId)}}},
+      {$sample: {size: 4}}
+    ]).toArray();
 
-  const racers = [userAnimal, ...opponents];
+    const racers = [userAnimal, ...opponents];
 
-  const result = simulateRace(racers);
+    const { results, title, modifiers } = simulateRace(racers);
 
-  await updateMedals(db, result);
+    const db = client.db('finaldb')
+    await updateMedals(db, results);
 
-  const raceDoc = {
-    title: "testTitle",
-    first: result[0]._id,
-    second: result[1]._id,
-    third: result[2]._id,
-    fourth: result[3]._id,
-    fifth: result[4]._id,
-  }
+    if(results.length < 5) {
+      return res.status(400).json({error: "not enough animals for race"});
+    }
 
-  await historyCollection.insertOne(raceDoc);
+    const raceDoc = {
+      title,
+      first: results[0]._id,
+      second: results[1]._id,
+      third: results[2]._id,
+      fourth: results[3]._id,
+      fifth: results[4]._id,
+    }
 
-  res.json({
-    title: "test Title",
-    result: result.map((r, i) => ({
-      place: i + 1,
-      name: r.name,
-      username: r.username,
-      score: r.finalScore.toFixed(2)
+    await historyCollection.insertOne(raceDoc);
+
+    res.json({
+      title,
+      results: results.map((r, i) => ({
+        place: i + 1,
+        name: r.name,
+        username: r.username,
+        score: r.finalScore.toFixed(2)
     }))
   });
   }catch (err){
-    res.status(500).json({error: "failed to start race"});
+    res.status(500).json({error: "failed to start race" + err});
   }
   
 })
 
 async function updateMedals(db, results) {
   const medals = ["gold", "silver", "bronze"];
-  for (let i = 0; i < results.length; i++) {
-    const update = {};
-    if (i < 3) update[`$inc`] = { [medals[i]]: 1};
-    await animalsCollection.updateOne({_id: results[i]._id}, update);
+  for (let i = 0; i < 3 && i < results.length; i++) {
+    const inc = { $inc: { [medals[i]]: 1}};
+    await animalsCollection.updateOne({_id: results[i]._id}, inc);
   }
 }
 
