@@ -129,12 +129,12 @@ app.post('/logout', (req, res) => {
   res.redirect('/login');
 })
 
-app.post("/leaderboard", async (req, res) => {
+app.get("/leaderboard", async (req, res) => {
   try {
     const leaderboard = await animalsCollection.aggregate([
       {
         $group: {
-          username: "username",
+          _id: "$username",
           totalGold: {$sum: {$toInt: "$gold"}},
           totalSilver: {$sum: {$toInt: "$silver"}},
           totalBronze: {$sum: {$toInt: "$bronze"}}

@@ -1,4 +1,5 @@
 const API = "http://localhost:3000";
+
 const login = async function (event) {
     event.preventDefault()
     const username = document.querySelector("#username").value
@@ -22,7 +23,7 @@ const login = async function (event) {
     }
 }
 
-async function loadAnimals(){
+async function loadAnimals() {
     const response = await fetch(API + "/animals");
     const animals = await response.json();
     const tbody = document.querySelector("#animalsTable tbody");
@@ -39,27 +40,39 @@ async function loadAnimals(){
 }
 
 async function loadLeaderboard() {
-    const response = await fetch(API + "/leaderboard");
-    const board = await response.json();
-    const tbody = document.querySelector("#leaderboardTable tbody");
-    tbody.innerHTML = "";
-    board.forEach(r => {
-        tbody.innerHTML += `<tr><td>${r.name}</td><td>${r.type}</td><td>${r.wins}</td></tr>`;
-    });
+    try {
+        const response = await fetch(API + "/leaderboard");
+        if (!response.ok) throw new Error("Failed to fetch leaderboard")
+        const data = await response.json();
+
+        const entries = document.getElementById("leaderboard-entries")
+        entries.innerHTML = ""
+
+        data.forEach(obj => {
+            const row = entries.insertRow()
+
+            row.insertCell(0).innerText = obj._id
+            row.insertCell(1).innerText = obj.totalGold
+            row.insertCell(2).innerText = obj.totalSilver
+            row.insertCell(3).innerText = obj.totalBronze
+        })
+    } catch (err) {
+        console.error("Error loading leaderboard:", err);
+    }
 }
 
-function recalcPoints(){
+function recalcPoints() {
     const form = document.getElementById("createForm");
-    const s =+ form.speed.value;
-    const st =+ form.stamina.value;
-    const a =+ form.agility.value;
-    const d =+ form.dexterity.value;
+    const s = + form.speed.value;
+    const st = + form.stamina.value;
+    const a = + form.agility.value;
+    const d = + form.dexterity.value;
     const total = s + st + a + str + 1;
     const rem = 30 - total;
 
     document.getElementById("pointsLeft").innerText = remain;
     const error = document.getElementById("createError");
-    if (remain < 0){
+    if (remain < 0) {
         error.innerText = `Too many points allocated by ${-remain}. Reduce some statistics.`;
     } else {
         error.innerText = "";
@@ -71,7 +84,7 @@ document.addEventListener("DOMContentLoaded", () => {
     recalcPoints();
 })
 
-async function createAnimal(event){
+async function createAnimal(event) {
     event.preventDefault();
     const form = e.target;
     const body = {
@@ -89,11 +102,11 @@ async function createAnimal(event){
     }
     const response = await fetch(API + "/animals", {
         method: "POST",
-        headers: {"Content-Type": "application/json"},
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body)
     });
     const data = await response.json;
-    if (data.error){
+    if (data.error) {
         document.getElementById("createError").innerText = data.error;
     } else {
         form.reset();
@@ -103,22 +116,14 @@ async function createAnimal(event){
     }
 }
 
-function showResults(data){
+function showResults(data) {
     const tbody = document.querySelector("#resultsTable tbody");
-        tbody.innerHTML = "";
-        data.standings.forEach(s => {
-            tbody.innerHTML += `<tr>
+    tbody.innerHTML = "";
+    data.standings.forEach(s => {
+        tbody.innerHTML += `<tr>
                 <td>${s.place}</td><td>${s.name}</td><td>${s.type}</td><td>${s.score}</td>
             </tr>`;
-        });
-}
-
-const leaderboard = async function(event) {
-    const response = await fetch("/leaderboard")
-
-    const leaderboard = await response.json()
-    const entries = document.getElementById("leaderboard").getElementById("entries")[0]
-    entries.innerHTML = ""
+    });
 }
 /*
 /create animal
@@ -131,5 +136,7 @@ const leaderboard = async function(event) {
 */
 
 window.onload = function () {
-    document.getElementById("credentials").addEventListener("submit", login)
+    // document.getElementById("credentials").addEventListener("submit", login)
+    loadLeaderboard()
+    loadAnimals()
 }
