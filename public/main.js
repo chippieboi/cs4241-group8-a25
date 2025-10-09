@@ -277,9 +277,9 @@ const viewHistory = async function(event) {
 
         const historyTable = document.createElement("table")
         historyTable.innerHTML = `
+        <tr><th>${record.title}</th></tr
         <tr>
             <th>Rank</th>
-            <th>Title</th>
             <th>Player name</th>
             <th>animal name</th>
             <th>animal type</th>
@@ -297,7 +297,6 @@ const viewHistory = async function(event) {
         const firstEntry = document.createElement("tr")
         firstEntry.innerHTML = `
         <td>1</td>
-        <td>${record.title}</td>
         <td>${first.username}</td>
         <td>${first.name}</td>
         <td>${first.type}</td>
@@ -315,7 +314,6 @@ const viewHistory = async function(event) {
         const secondEntry = document.createElement("tr")
         secondEntry.innerHTML = `
         <td>2</td>
-        <td>${record.title}</td>
         <td>${second.username}</td>
         <td>${second.name}</td>
         <td>${second.type}</td>
@@ -333,7 +331,6 @@ const viewHistory = async function(event) {
         const thirdEntry = document.createElement("tr")
         thirdEntry.innerHTML = `
         <td>3</td>
-        <td>${record.title}</td>
         <td>${third.username}</td>
         <td>${third.name}</td>
         <td>${third.type}</td>
@@ -351,7 +348,6 @@ const viewHistory = async function(event) {
         const fourthEntry = document.createElement("tr")
         fourthEntry.innerHTML = `
         <td>4</td>
-        <td>${record.title}</td>
         <td>${fourth.username}</td>
         <td>${fourth.name}</td>
         <td>${fourth.type}</td>
@@ -369,7 +365,6 @@ const viewHistory = async function(event) {
         const fifthEntry = document.createElement("tr")
         fifthEntry.innerHTML = `
         <td>5</td>
-        <td>${record.title}</td>
         <td>${fifth.username}</td>
         <td>${fifth.name}</td>
         <td>${fifth.type}</td>
