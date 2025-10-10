@@ -57,29 +57,29 @@ async function loadAnimals() {
     })
 }
 
-/*function recalcPoints() {
-    const form = document.getElementById("createForm");
-    const s = + form.speed.value;
-    const st = + form.stamina.value;
-    const a = + form.agility.value;
-    const d = + form.dexterity.value;
-    const total = s + st + a + d;
-    const rem = 30 - total;
+const totalPoints = 30;
+const statInputs = document.querySelectorAll("#speed, #stamina, #agility, #dexterity");
+const remainingNum = document.getElementById("remainingPoints");
 
-    document.getElementById("pointsLeft").innerText = remain;
+function recalcPoints() {
+    let used = 0;
+    statInputs.forEach(input => {
+        used += parseInt(input.value) || 0;
+    })
+
+    let remaining = totalPoints - used;
+
+    remainingNum.innerText = remaining;
     const error = document.getElementById("createError");
 
-    if (remain < 0) {
+    if (remaining < 0) {
         error.innerText = `Too many points allocated by ${-remain}. Reduce some statistics.`;
+        remaining = 0;
     } else {
         error.innerText = "";
+
     }
 }
-
-document.addEventListener("DOMContentLoaded", () => {
-    document.getElementById("pointTotal").innerText = 30;
-    recalcPoints();
-})*/
 
 async function createAnimal(event) {
     event.preventDefault();
@@ -451,8 +451,13 @@ window.onload = function () {
     // document.getElementById("credentials").addEventListener("submit", login)
     loadLeaderboard()
     loadAnimals()
+    recalcPoints()
     viewHistory()
 }
+
+statInputs.forEach(input => {
+    input.addEventListener("input", recalcPoints);
+}); 
 
 // Delegated handler: toggle detail rows when a main-row is clicked
 document.getElementById('historyLog').addEventListener('click', (e) => {
