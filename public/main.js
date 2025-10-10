@@ -28,33 +28,59 @@ const login = async function (event) {
 async function loadAnimals() {
     const response = await fetch("/loadAnimals");
     const animals = await response.json();
-
-    const animalList = document.querySelector("#animalsTable tbody");
+    console.log("The Animals: " + JSON.stringify(animals))
     const select = document.getElementById("raceSelect");
-    animalList.innerHTML = "";
     select.innerHTML = "";
 
     animals.forEach(animal => {
-        const newAnimal = document.createElement("tr");
-        newAnimal.innerHTML = `
-            <td>${animal.name}</td>
-            <td>${animal.type}</td>
-            <td>${animal.speed}</td>
-            <td>${animal.stamina}</td>
-            <td>${animal.agility}</td>
-            <td>${animal.dexterity}</td>
-            <td>
-                <button onclick="editAnimal('${animal._id}', '${animal.name}', '${animal.type}', ${animal.speed}, ${animal.stamina}, ${animal.agility}, ${animal.dexterity})">Edit</button>
-                <button onclick="deleteAnimal('${animal._id}')">Delete</button>
-            </td>
+        const newAnimal = document.createElement("table");
+        let inner = `
+            <table class="animalsTable" ><tbody>
+                <tr><td style="color: #FFEFB7;">Name:      </td><td colspan="4" class="tableText">${animal.name}</td></tr>
+                <tr><td style="color: #FFEFB7;">Type:   </td><td colspan="4" class="tableText">${animal.type}</td></tr>
+                <tr><td style="color: #FFEFB7;">Speed:     </td><td class="tableText">${animal.speed}</td>
+                    <td style="color: #FFEFB7;">Stamina:   </td><td class="tableText">${animal.stamina}</td>
+                    <td style="color: #749951;" rowspan="2" class="createButton" onclick="deleteAnimal('${animal._id}')">Delete</td></tr>
+                <tr><td style="color: #FFEFB7;">Agility:</td><td class="tableText">${animal.agility}</td>
+                    <td style="color: #FFEFB7;">Dexterity:</td><td class="tableText">${animal.dexterity}</td></tr>
+                </tbody>
+            </table>
         `;
-        animalList.appendChild(newAnimal);
+        slots[slotCount].innerHTML = inner;
+        slotCount++;
+        console.log("Slot Count: " + slotCount)
+        let pick = animal.type
+        console.log("Pick: " + pick)
+        console.log("current icon: " + icons[iconCount] + " at " + iconCount)
+        switch (pick) {
+            case "kangaroo":
+                icons[iconCount].innerHTML = "<img class='emptyIcons' src='kangaroo.png'> "
+                break;
+            case "horse":
+                icons[iconCount].innerHTML = "<img class='emptyIcons' src='horse.png'>"
+                break;
+            case "dog":
+                icons[iconCount].innerHTML = "<img class='emptyIcons' src='dog.png'>"
+                break;
+            case "cat":
+                icons[iconCount].innerHTML = "<img class='emptyIcons' src='cat.png'>"
+                break;
+            default:
+                break;
+        }
+        iconCount++;
         const option = document.createElement("option");
         option.value = animal._id;
         option.textContent = `${animal.name} (${animal.type})`;
         select.appendChild(option);
-        //select.innerHTML += `<option value="${animal._id}">${animal.name} (${animal.type})</option>`;
     })
+    for (slotCount; slotCount < 3; slotCount++){
+        console.log("trying slotcount " + slotCount)
+        console.log(overlays[slotCount])
+        overlays[slotCount].style.display = 'block';
+        console.log("went well")
+    }
+    
 }
 
 /*function recalcPoints() {
@@ -91,6 +117,7 @@ async function createAnimal(event) {
     const stamina = parseInt(document.getElementById("stamina").value);
     const agility = parseInt(document.getElementById("agility").value);
     const dexterity = parseInt(document.getElementById("dexterity").value);
+    let modal = document.getElementById("createModal");
 
     const animalData = { name, type, speed, stamina, agility, dexterity };
 
@@ -113,6 +140,8 @@ async function createAnimal(event) {
         form.reset();
         //recalcPoints();
         loadAnimals();
+        modal.style.display = "none";
+        
     } else {
         alert(result.error || "Error creating animal.");
     }
@@ -197,9 +226,11 @@ async function deleteAnimal(id) {
   if (result.success) {
     alert("Animal deleted");
     loadAnimals();
+    window.location.reload();
   } else {
     alert(result.error || "Error deleting animal");
   }
+  
 }
 
 
@@ -295,7 +326,7 @@ const viewHistory = async function(event) {
         
         const historyTable = document.createElement("table")
         historyTable.innerHTML = `
-        <tr class="main-row" style="cursor:pointer"><th colspan="2">${record.title}</th><th>${ownAnimal.animalName}</th><th>${ownAnimal.rank}</th></tr>
+        <tr class="main-row" style="cursor:pointer"><th colspan="2">${record.title}</th><th>${ownAnimal.rank}</th></tr>
         <tr class="detail-row" style="display:none">
             <th>Rank</th>
             <th>Player name</th>
@@ -304,7 +335,7 @@ const viewHistory = async function(event) {
         </tr>
         `
        
-        const firstRes = await fetch(`/viewAnimal`, {
+        const firstRes = await fetch('/viewAnimal', {
             method: "POST",
             body: JSON.stringify({ animalId: record.first }),
             headers: { 'Content-Type': 'application/json' }
@@ -448,6 +479,60 @@ async function loadLeaderboard() {
 */
 
 window.onload = function () {
+    var modal = document.getElementById("createModal");
+    var innerModal = document.getElementById("modalContent");
+    var btn1 = document.getElementById("btn1");
+    var btn2 = document.getElementById("btn2");
+    var btn3 = document.getElementById("btn3");
+    var cancelBtn = document.getElementById("cancelCreate")
+    var sliders = document.getElementsByClassName("slider")
+    var values = document.getElementsByClassName("valueBox")
+    var options = document.getElementById("animalType")
+    var icon = document.getElementById("theIcon")
+    
+    options.oninput = function(){
+        var pick = options.value
+        console.log("The pick: " + pick)
+        switch (pick) {
+            case "kangaroo":
+                icon.innerHTML = "<img src='kangaroo.png'> "
+                break;
+            case "horse":
+                icon.innerHTML = "<img src='horse.png'>"
+                break;
+            case "dog":
+                icon.innerHTML = "<img src='dog.png'>"
+                break;
+            case "cat":
+                icon.innerHTML = "<img src='cat.png'>"
+                break;
+            default:
+                break;
+        }
+    }
+    btn1.onclick = function(){
+        console.log("Clicked 1")
+        modal.style.display = 'block';
+    }
+    btn2.onclick = function(){
+        console.log("Clicked2")
+        modal.style.display = 'block';
+    }
+    btn3.onclick = function(){
+        console.log("Clicked3")
+        modal.style.display = 'block';
+    }
+    cancelBtn.onclick = function(){
+        console.log("Canceled")
+        modal.style.display = "none";
+    }
+
+    for (let i = 0; i < sliders.length; i++){
+        sliders[i].oninput = function(){
+            values[i].innerHTML = this.value;
+        }
+    }
+    
     // document.getElementById("credentials").addEventListener("submit", login)
     loadLeaderboard()
     loadAnimals()
