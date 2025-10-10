@@ -1,48 +1,12 @@
 # Final Project
-Michael Lin, Breanna Lee, Tiffany Semexant
-[Example Projects from D24](https://echo360.org/collection/35d9eb4e-1c44-4880-80b5-c7a2f04ba64c/public)
-
-[Example Projects from A23](https://echo360.org/collection/50a4d343-caea-4deb-93ee-61bdd7da543f/public)
-
-**Example Projects from Earlier Terms:**
-- [https://pushbox.glitch.me/app](https://pushbox.glitch.me/app)
-- [https://github.com/Cather-Zhang/final_project](https://github.com/Cather-Zhang/final_project)
-- [https://clip.kmoene.com/](https://clip.kmoene.com/)
-- [https://github.com/GP2P/G3P-Expense-Tracker](https://github.com/GP2P/G3P-Expense-Tracker)
-
-For your final project, you'll implement a web application that exhibits understanding of the course materials. This project should provide an opportunity to both be creative and to pursue individual research and learning goals.
-
-## General description
-Your project should consist of a complete Web application, exhibiting facets of the three main sections of the course material:
-
-- Static web page content and design. You should have a project that is accessible, easily navigable, and features significant content.
-- Dynamic behavior implemented with JavaScript (TypeScript is also allowed if your group wants to explore it).
-- Server-side programming *using Node.js*. Typically this will take the form of some sort of persistent data (database), authentication, and possibly server-side computation. 
-- A video (less than five minutes) where each group member explains some aspect of the project. An easy way to produce this video is for you all the groups members to join a Zoom call that is recorded; each member can share their screen when they discuss the project or one member can "drive" the interface while other members narrate (this second option will probably work better.) Upload the video to Canvas. (Further instructions are available in the Canvas assignment.) Make sure your video is less than five minutes but long enough to successfully explain your project and show it in action. There is no minimum video length.
-
-## Project ideation
-Excellent projects typically serve someone/some group; for this assignment you need to define your users and stakeholders. I encourage you to identify projects that will have some impact, whether artistically, politically, productivity, or something else altogether. 
-
-## Deliverables
-
-### Form Team (Due Tuesday, September 23, 11:59 pm)
-Students are will work in teams of 3-5 students for the project. Working in teams should help enable you to build a good project in a limited amount of time.  Use the `#finalproject` channel in Slack to pitch ideas for final projects and/or find fellow team members as needed.
-
-Teams must be in place by end of day on Tuesday, September 23. If you have not identified a team at this point, you will be assigned a team. **Put all team members together in one of the empty "Final Project" groups on Canvas. You MUST do this step to receive full credit on the assignment.**
-
-### Proposal (Due Tuesday, September 30, 11:59 pm) 
-Provide an outline of your project direction and the names of associated team members. The outline should have enough detail so that staff can determine if it meets the minimum expectations or if it goes too far to be reasonable by the deadline. Please include a general description of the project and a list of key technologies/libraries you plan on using (e.g. React, Three.js, Svelte, TypeScript, etc.). Two to four paragraps should provide enough level of detail. Name the file proposal.md and submit a pull request by Tuesday, September 30th at 11:59 PM (end of day). Your pull request does not need to have a specific name. Only one pull request is required per team.
-
-There are no other scheduled checkpoints for your project. 
+Michael Lin, Breanna Lee, Tiffany Semexant, Ethan Carter, Isbael Cruz Rivera
 
 ### Turning in Your Project (Due Friday, October 10, 11:59 pm)
 **Although the assignment is due at 11:59 pm, you must be prepared to demo your website in class that day.**
 
 Submit a second PR on the final project repo to turn in your app and code. Again, only one pull request per team.
 
-Deploy your app, in the form of a webpage, to Render/Heroku/Digital Ocean or whatever hosting service you choose; it is critical that the application functions correctly wherever you post it.
-
-The README for your second pull request doesn’t need to be a formal report, but it should contain the following:
+Render link: https://webware-group8.onrender.com
 
 1. A brief description of what you created, and a link to the project itself (two paragraphs of text)
 2. Any additional instructions that might be needed to fully use your project (login information, etc.)
@@ -55,8 +19,18 @@ Think of 1, 3, and 4 in particular in a similar vein to the design / technical a
 
 The video described above is also due on Canvas at this time.
 
-## FAQs
+1. Our project is a game that focuses on racing user-created animals. We have users log in and/or register their accounts to gain access to the home page. Each user is then greeted by our home page menu. You have the ability to create up to three custom animals. Creating animals comes with a name, an animal type, and allocating stat points to each of the four stats: speed, stamina, agility, and dexterity. Each animal type also boosts a specific stat. After the user creates at least one animal, they can race them! The race functionality works by doing some randomized math on the animal's stats to come up with a score to compare against the other animals in each race. Each race consists of 5 animals, and only one animal from the user who started the race. After all of the scores are calculated, the information is displayed on the page to show the places, the names of the animals, the user who created the animal, and the score. You can just keep clicking the race button as much as you want. If you want to swap animals, there is a drop-down to choose another animal. After racing, users will look at the history and leaderboard sections of the page. The leaderboard shows all users in the database alongside how many medals each user has won. Golds, silvers, and bronzes are the only places that count, and it doesn't matter which animal wins. The history section lets you browse previous races your animals have competed in. The only information not shown in history vs immediately after the race is the score; everything else is present.
 
-**Can I use XYZ framework?** 
+2. Logging in should be super simple, but if you want an existing login you can use username: user1 and password: 123.
 
-You can use any web-based frameworks or tools available, but for your server programming you need to use Node.js. Your client-side scripting language should be either JavaScript or TypeScript. Note that the staff may not be able to assist with TypeScript questions.
+3. We used Express, MongoDB, Node, HTML, and CSS. Express was used for our server and for creating our routes. MongoDB was used to store our information. We had three tables: users, animals, and history. Figuring out how to structure our database to make all information available for what we wanted was the biggest challenge related to MongoDB. Node, HTML, and CSS are pretty self explanatory.
+
+4. Figuring out the database structure in MongoDB took a lot of work and communication. This is because we had slightly different visions for what information would be readable on the website, and it resulted in a different database structure. We also struggled with what the website would look like at the start. Determining all of the actions users could take and how they would work under the hood took us a while to nail down before we finally started programming. Designing the edit or delete animal behaviors took a lot of work as well because of the history section. What should be shown in the history of a deleted animal? We discussed it a lot and decided to get rid of the editing function and keep deleting as the history functionality still works with it. The race functionality also took a lot of work to determine how to calculate score for placements. We ended up going with a bunch of different modifiers that determine the type of race and scale-specific attributes to make the result of each race slightly random while still prioritizing stat amounts.
+
+5. Breanna: Create animal, delete animal, edit animal, live calculation of remaining points in create animal screen.
+   Ethan: All race functionality - math, database storing, and visualization
+   Isabel: Leaderboard functionality, login and register
+   Michael: History functionality, login and register
+   Tiffany: Visuals and styling. All of the HTML and CSS work
+
+6. ALT tags for images and labels for form items.
