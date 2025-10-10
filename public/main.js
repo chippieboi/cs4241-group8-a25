@@ -40,11 +40,11 @@ async function loadAnimals() {
     }
 
     let icon1 = document.getElementById("icon1");
-    icon1.innerHTML = "<img class='emptyIcons' src='empty.png'> ";
+    icon1.innerHTML = "<img class='emptyIcons' src='empty.png' alt= 'Pixel art image of a blank user icon.'> ";
     let icon2 = document.getElementById("icon2");
-    icon2.innerHTML = "<img class='emptyIcons' src='empty.png'> ";
+    icon2.innerHTML = "<img class='emptyIcons' src='empty.png' alt= 'Pixel art image of a blank user icon.'> ";
     let icon3 = document.getElementById("icon3");
-    icon3.innerHTML = "<img class='emptyIcons' src='empty.png'> ";
+    icon3.innerHTML = "<img class='emptyIcons' src='empty.png' alt= 'Pixel art image of a blank user icon.'> ";
     const icons = [icon1, icon2, icon3];
     let iconCount = 0;
 
@@ -76,16 +76,16 @@ async function loadAnimals() {
         console.log("current icon: " + icons[iconCount] + " at " + iconCount)
         switch (pick) {
             case "kangaroo":
-                icons[iconCount].innerHTML = "<img class='emptyIcons' src='kangaroo.png'> "
+                icons[iconCount].innerHTML = "<img class='emptyIcons' src='kangaroo.png' alt= 'Pixel art image of a kangaroo.'> "
                 break;
             case "horse":
-                icons[iconCount].innerHTML = "<img class='emptyIcons' src='horse.png'>"
+                icons[iconCount].innerHTML = "<img class='emptyIcons' src='horse.png' alt= 'Pixel art image of a horse.'>"
                 break;
             case "dog":
-                icons[iconCount].innerHTML = "<img class='emptyIcons' src='dog.png'>"
+                icons[iconCount].innerHTML = "<img class='emptyIcons' src='dog.png' alt= 'Pixel art image of a dog.'>"
                 break;
             case "cat":
-                icons[iconCount].innerHTML = "<img class='emptyIcons' src='cat.png'>"
+                icons[iconCount].innerHTML = "<img class='emptyIcons' src='cat.png' alt= 'Pixel art image of a cat.'>"
                 break;
             default:
                 break;
@@ -518,16 +518,16 @@ window.onload = function () {
         console.log("The pick: " + pick)
         switch (pick) {
             case "kangaroo":
-                icon.innerHTML = "<img src='kangaroo.png'> "
+                icon.innerHTML = "<img src='kangaroo.png' alt= 'Pixel art image of a kangaroo.'> "
                 break;
             case "horse":
-                icon.innerHTML = "<img src='horse.png'>"
+                icon.innerHTML = "<img src='horse.png' alt= 'Pixel art image of a horse.'>"
                 break;
             case "dog":
-                icon.innerHTML = "<img src='dog.png'>"
+                icon.innerHTML = "<img src='dog.png' alt= 'Pixel art image of a dog.'>"
                 break;
             case "cat":
-                icon.innerHTML = "<img src='cat.png'>"
+                icon.innerHTML = "<img src='cat.png' alt= 'Pixel art image of a cat.'>"
                 break;
             default:
                 break;
