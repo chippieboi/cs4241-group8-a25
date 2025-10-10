@@ -18,21 +18,15 @@ const login = async function (event) {
         return;
     }
 
-    /*if (data.message) {
-        alert(data.message)
-    }
-    alert("Login successful!");*/
     window.location.href = "/";
 }
 
 async function loadAnimals() {
     const response = await fetch("/loadAnimals");
     const animals = await response.json();
-    console.log("The Animals: " + JSON.stringify(animals))
     const select = document.getElementById("raceSelect");
     select.innerHTML = "";
     let numAnimals = animals.length;
-    console.log(numAnimals)
 
     let overlays = [document.getElementById("overlay1"), document.getElementById("overlay2"), document.getElementById("overlay3")]
     for(let i = 3; i < 3; i++){
@@ -70,10 +64,7 @@ async function loadAnimals() {
         `;
         slots[slotCount].innerHTML = inner;
         slotCount++;
-        console.log("Slot Count: " + slotCount)
         let pick = animal.type
-        console.log("Pick: " + pick)
-        console.log("current icon: " + icons[iconCount] + " at " + iconCount)
         switch (pick) {
             case "kangaroo":
                 icons[iconCount].innerHTML = "<img class='emptyIcons' src='kangaroo.png' alt= 'Pixel art image of a kangaroo.'> "
@@ -97,10 +88,7 @@ async function loadAnimals() {
         select.appendChild(option);
     })
     for (slotCount; slotCount < 3; slotCount++){
-        console.log("trying slotcount " + slotCount)
-        console.log(overlays[slotCount])
         overlays[slotCount].style.display = 'block';
-        console.log("went well")
     }
     
 }
@@ -132,7 +120,6 @@ function recalcPoints() {
 async function createAnimal(event) {
     event.preventDefault();
     const form = event.target;
-    //if (form.dataset.editId) return editAnimal(event);
     const name = document.getElementById("animalName").value;
     const type = document.getElementById("animalType").value;
     const speed = parseInt(document.getElementById("speed").value);
@@ -158,9 +145,7 @@ async function createAnimal(event) {
     const data = await response.json();
 
     if (response.ok && data.success) {
-        //alert("Animal created");
         form.reset();
-        //recalcPoints();
         loadAnimals();
         modal.style.display = "none";
         
@@ -170,17 +155,7 @@ async function createAnimal(event) {
 }
 
 async function editAnimal(id, name, type, speed, stamina, agility, dexterity) {
-    //const form = event.target;
-    //const id = form.dataset.editId;
-
-    /*const body = {
-        name: form.name.value,
-        type: form.type.value,
-        speed: +form.speed.value,
-        stamina: +form.stamina.value,
-        agility: +form.agility.value,
-        dexterity: +form.dexterity.value,
-    };*/
+    
     const newName = prompt("Enter new name:", name) ?? name;
     const newType = prompt("Enter new type:", type) ?? type;
     const newSpeed = parseInt(prompt("Enter new speed:", speed));
@@ -209,34 +184,8 @@ async function editAnimal(id, name, type, speed, stamina, agility, dexterity) {
     } else {
         alert(data.error || "Error updating animal");
     }
-
-    //form.reset();
-   // form.removeAttribute("data-edit-id");
-    //document.getElementById("createButton").innerText = "Create Animal";
-    //loadAnimals();
 }
 
-// Load animal into form for editing
-/*async function loadAnimalForEdit(id) {
-    const res = await fetch("/loadAnimal", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ animalId: id })
-    });
-
-    const animal = await res.json();
-
-    const form = document.getElementById("createForm");
-    form.name.value = animal.name;
-    form.type.value = animal.type;
-    form.speed.value = animal.speed;
-    form.stamina.value = animal.stamina;
-    form.agility.value = animal.agility;
-    form.dexterity.value = animal.dexterity;
-    form.dataset.editId = animal._id;
-
-    document.getElementById("createButton").innerText = "Save Changes";
-}*/
 
 async function deleteAnimal(id) {
   if (!confirm("Are you sure you want to delete this animal?")) return;
@@ -246,7 +195,6 @@ async function deleteAnimal(id) {
 
   const result = await res.json();
   if (result.success) {
-    //alert("Animal deleted");
     loadAnimals();
     window.location.reload();
   } else {
@@ -312,7 +260,6 @@ async function startRace(event) {
         raceTitleE1.textContent = `${data.title}`;
         document.body.insertBefore(raceTitleE1, document.querySelector("#resultsTable"));
 
-        console.log("Race results:", data);
 
     } catch (err) {
         console.error("error starting race:", err);
@@ -490,15 +437,7 @@ async function loadLeaderboard() {
         console.error("Error loading leaderboard:", err);
     }
 }
-/*
-/create animal
-/edit animal      - edit animal
-/view history     - show history for the user (as opposed to animal specific)
-/race             - handle selecting other users' animals to race against, calculating who wins, displaying race info
-                  - insert related info into history table, update animal table (maybe user table if user also tracks total wins)
-/view animals     - show all animals of a given user
-/leaderboard
-*/
+
 
 window.onload = function () {
     var modal = document.getElementById("createModal");
@@ -515,7 +454,6 @@ window.onload = function () {
     
     options.oninput = function(){
         var pick = options.value
-        console.log("The pick: " + pick)
         switch (pick) {
             case "kangaroo":
                 icon.innerHTML = "<img src='kangaroo.png' alt= 'Pixel art image of a kangaroo.'> "
@@ -534,19 +472,15 @@ window.onload = function () {
         }
     }
     btn1.onclick = function(){
-        console.log("Clicked 1")
         modal.style.display = 'block';
     }
     btn2.onclick = function(){
-        console.log("Clicked2")
         modal.style.display = 'block';
     }
     btn3.onclick = function(){
-        console.log("Clicked3")
         modal.style.display = 'block';
     }
     cancelBtn.onclick = function(){
-        console.log("Canceled")
         modal.style.display = "none";
     }
 
