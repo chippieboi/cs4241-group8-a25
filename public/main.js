@@ -18,10 +18,10 @@ const login = async function (event) {
         return;
     }
 
-    if (data.message) {
+    /*if (data.message) {
         alert(data.message)
     }
-    alert("Login successful!");
+    alert("Login successful!");*/
     window.location.href = "/";
 }
 
@@ -121,7 +121,7 @@ function recalcPoints() {
     const error = document.getElementById("createError");
 
     if (remaining < 0) {
-        error.innerText = `Too many points allocated by ${-remain}. Reduce some statistics.`;
+        error.innerText = `Too many points allocated by ${-remaining}. Reduce some statistics.`;
         remaining = 0;
     } else {
         error.innerText = "";
@@ -158,7 +158,7 @@ async function createAnimal(event) {
     const data = await response.json();
 
     if (response.ok && data.success) {
-        alert("Animal created");
+        //alert("Animal created");
         form.reset();
         //recalcPoints();
         loadAnimals();
@@ -246,7 +246,7 @@ async function deleteAnimal(id) {
 
   const result = await res.json();
   if (result.success) {
-    alert("Animal deleted");
+    //alert("Animal deleted");
     loadAnimals();
     window.location.reload();
   } else {
