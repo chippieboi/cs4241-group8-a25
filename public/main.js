@@ -475,7 +475,7 @@ async function loadLeaderboard() {
         if (!response.ok) throw new Error("Failed to fetch leaderboard")
         const data = await response.json();
 
-        const entries = document.getElementById("leaderboard-entries")
+        const entries = document.getElementById("leaderboard-entries").getElementsByTagName("tbody")[0]
         entries.innerHTML = ""
 
         data.forEach(obj => {
