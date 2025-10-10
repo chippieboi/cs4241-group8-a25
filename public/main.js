@@ -378,7 +378,7 @@ const viewHistory = async function(event) {
         historyTable.appendChild(firstEntry)
         }
 
-        const secondRes = await fetch(`/viewAnimal`, {
+        const secondRes = await fetch('/viewAnimal', {
             method: "POST",
             body: JSON.stringify({ animalId: record.second }),
             headers: { 'Content-Type': 'application/json' }
@@ -399,7 +399,7 @@ const viewHistory = async function(event) {
         historyTable.appendChild(secondEntry)
         }
 
-        const thirdRes = await fetch(`/viewAnimal`, {
+        const thirdRes = await fetch('/viewAnimal', {
             method: "POST",
             body: JSON.stringify({ animalId: record.third }),
             headers: { 'Content-Type': 'application/json' }
@@ -421,7 +421,7 @@ const viewHistory = async function(event) {
         historyTable.appendChild(thirdEntry)
         }
 
-        const fourthRes = await fetch(`/viewAnimal`, {
+        const fourthRes = await fetch('/viewAnimal', {
             method: "POST",
             body: JSON.stringify({ animalId: record.fourth }),
             headers: { 'Content-Type': 'application/json' }
@@ -442,7 +442,7 @@ const viewHistory = async function(event) {
         historyTable.appendChild(fourthEntry)
         }
 
-        const fifthRes = await fetch(`/viewAnimal`, {
+        const fifthRes = await fetch('/viewAnimal', {
             method: "POST",
             body: JSON.stringify({ animalId: record.fifth }),
             headers: { 'Content-Type': 'application/json' }
