@@ -511,6 +511,7 @@ window.onload = function () {
     var values = document.getElementsByClassName("valueBox")
     var options = document.getElementById("animalType")
     var icon = document.getElementById("theIcon")
+    var createButton = document.getElementById("createNew")
     
     options.oninput = function(){
         var pick = options.value
@@ -555,6 +556,12 @@ window.onload = function () {
         }
     }
     
+    createButton.onclick = function(){
+        for (let i = 0; i < sliders.length; i++){
+            values[i].innerHTML = 0;
+    }
+    }
+
     // document.getElementById("credentials").addEventListener("submit", login)
     loadLeaderboard()
     loadAnimals()
