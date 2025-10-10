@@ -176,9 +176,25 @@ app.post("/createAnimal", authenticateToken, async (req, res) => {
     const { name, type , speed, stamina, agility, dexterity} = req.body;
     if (!name || !type) return res.status(400).json({error: "Missing name or type"});
 
-    const stats = [speed, stamina, agility, dexterity].map(Number);
     const total = speed + stamina + agility + dexterity;
     if (total > 30) return res.status(400).json({ error: "Stat total exceeds 30 points"});
+
+    const stats = [speed, stamina, agility, dexterity].map(Number);
+
+    console.log(stats);
+    console.log(stats[0]);
+
+    if (type == "horse") {
+      stats[0] += 5; 
+    } else if (type == "cat") {
+      stats[1] += 5;
+      console.log(stats.agility);
+    } else if(type == "dog") {
+      stats[2] += 5;
+    } else {
+      stats[3] += 5;
+    }
+    console.log(stats);
 
     const username = req.user.username;
 
