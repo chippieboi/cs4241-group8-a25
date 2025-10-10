@@ -31,6 +31,28 @@ async function loadAnimals() {
     console.log("The Animals: " + JSON.stringify(animals))
     const select = document.getElementById("raceSelect");
     select.innerHTML = "";
+    let numAnimals = animals.length;
+    console.log(numAnimals)
+
+    let overlays = [document.getElementById("overlay1"), document.getElementById("overlay2"), document.getElementById("overlay3")]
+    for(let i = 3; i < 3; i++){
+        overlays[i].style.display = 'none';
+    }
+
+    let icon1 = document.getElementById("icon1");
+    icon1.innerHTML = "<img class='emptyIcons' src='empty.png'> ";
+    let icon2 = document.getElementById("icon2");
+    icon2.innerHTML = "<img class='emptyIcons' src='empty.png'> ";
+    let icon3 = document.getElementById("icon3");
+    icon3.innerHTML = "<img class='emptyIcons' src='empty.png'> ";
+    const icons = [icon1, icon2, icon3];
+    let iconCount = 0;
+
+    let slot1 = document.getElementById("slot1");
+    let slot2 = document.getElementById("slot2");
+    let slot3 = document.getElementById("slot3");
+    const slots = [slot1, slot2, slot3]
+    let slotCount = 0;
 
     animals.forEach(animal => {
         const newAnimal = document.createElement("table");
