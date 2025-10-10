@@ -276,10 +276,26 @@ const viewHistory = async function(event) {
     const entries = document.getElementById("historyLog");
     entries.innerHTML ="";
     for (let record of history) {
-
+        let track = 0;
+        let ownAnimal = null;
+        try {
+            const ownRes = await fetch('/animalInHistory', {
+             method: "POST",
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ record })
+            });
+            if (ownRes.ok) {
+            ownAnimal = await ownRes.json();
+            } else {
+            console.error('animalInHistory failed', ownRes.status);
+            }
+} catch (err) {
+  console.error('animalInHistory network error', err);
+}
+        
         const historyTable = document.createElement("table")
         historyTable.innerHTML = `
-        <tr class="main-row" style="cursor:pointer"><th colspan="4">${record.title}</th></tr>
+        <tr class="main-row" style="cursor:pointer"><th colspan="2">${record.title}</th><th>${ownAnimal.animalName}</th><th>${ownAnimal.rank}</th></tr>
         <tr class="detail-row" style="display:none">
             <th>Rank</th>
             <th>Player name</th>
@@ -293,38 +309,42 @@ const viewHistory = async function(event) {
             body: JSON.stringify({ animalId: record.first }),
             headers: { 'Content-Type': 'application/json' }
         })
-
+        if(firstRes.ok){
+            track++;
         const first = await firstRes.json()
 
     const firstEntry = document.createElement("tr")
     firstEntry.className = "detail-row"
     firstEntry.style.display = 'none'
         firstEntry.innerHTML = `
-        <td>1</td>
+        <td>${track}</td>
         <td>${first.username}</td>
         <td>${first.name}</td>
         <td>${first.type}</td>
         `
         historyTable.appendChild(firstEntry)
+        }
 
         const secondRes = await fetch(`/viewAnimal`, {
             method: "POST",
             body: JSON.stringify({ animalId: record.second }),
             headers: { 'Content-Type': 'application/json' }
         })
-
+        if(secondRes.ok){
+            track++;
         const second = await secondRes.json()
 
     const secondEntry = document.createElement("tr")
     secondEntry.className = "detail-row"
     secondEntry.style.display = 'none'
         secondEntry.innerHTML = `
-        <td>2</td>
+        <td>${track}</td>
         <td>${second.username}</td>
         <td>${second.name}</td>
         <td>${second.type}</td>
         `
         historyTable.appendChild(secondEntry)
+        }
 
         const thirdRes = await fetch(`/viewAnimal`, {
             method: "POST",
@@ -332,37 +352,42 @@ const viewHistory = async function(event) {
             headers: { 'Content-Type': 'application/json' }
         })
 
+        if(thirdRes.ok){
+            track++;
         const third = await thirdRes.json()
 
     const thirdEntry = document.createElement("tr")
     thirdEntry.className = "detail-row"
     thirdEntry.style.display = 'none'
         thirdEntry.innerHTML = `
-        <td>3</td>
+        <td>${track}</td>
         <td>${third.username}</td>
         <td>${third.name}</td>
         <td>${third.type}</td>
         `
         historyTable.appendChild(thirdEntry)
+        }
 
         const fourthRes = await fetch(`/viewAnimal`, {
             method: "POST",
             body: JSON.stringify({ animalId: record.fourth }),
             headers: { 'Content-Type': 'application/json' }
         })
-
+        if(fourthRes.ok){
+            track++;
         const fourth = await fourthRes.json()
 
     const fourthEntry = document.createElement("tr")
     fourthEntry.className = "detail-row"
     fourthEntry.style.display = 'none'
         fourthEntry.innerHTML = `
-        <td>4</td>
+        <td>${track}</td>
         <td>${fourth.username}</td>
         <td>${fourth.name}</td>
         <td>${fourth.type}</td>
         `
         historyTable.appendChild(fourthEntry)
+        }
 
         const fifthRes = await fetch(`/viewAnimal`, {
             method: "POST",
@@ -370,18 +395,21 @@ const viewHistory = async function(event) {
             headers: { 'Content-Type': 'application/json' }
         })
 
+        if(fifthRes.ok){
+            track++;
         const fifth = await fifthRes.json()
 
     const fifthEntry = document.createElement("tr")
     fifthEntry.className = "detail-row"
     fifthEntry.style.display = 'none'
         fifthEntry.innerHTML = `
-        <td>5</td>
+        <td>${track}</td>
         <td>${fifth.username}</td>
         <td>${fifth.name}</td>
         <td>${fifth.type}</td>
         `
         historyTable.appendChild(fifthEntry)
+        }
 
 
         

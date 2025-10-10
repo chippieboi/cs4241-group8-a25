@@ -248,18 +248,71 @@ app.delete("/deleteAnimal/:id", authenticateToken, async (req, res) => {
 
 
 app.get("/viewHistory", authenticateToken, async (req, res) => {
-  const user = await usersCollection.findOne({ username: req.user.username })
-  const animals = await animalsCollection.find({username: user.username}).toArray()
-  let animalHistory = []
-  for (let animal of animals) {
-    animalHistory = await historyCollection.find({$or: [
-      {first: animal._id},
-      {second: animal._id},
-      {third: animal._id},
-      {fourth: animal._id}
-    ]}).toArray()  
+  try {
+    const user = await usersCollection.findOne({ username: req.user.username })
+    if (!user) return res.status(404).json({ error: 'User not found' })
+
+    const animals = await animalsCollection.find({ username: user.username }).toArray()
+    const ids = animals.map(a => a._id)
+
+    if (ids.length === 0) return res.json([])
+
+    // Find history docs where any of the first..fifth fields is one of user's animal ids
+    const historyDocs = await historyCollection.find({
+      $or: [
+        { first: { $in: ids } },
+        { second: { $in: ids } },
+        { third: { $in: ids } },
+        { fourth: { $in: ids } },
+        { fifth: { $in: ids } }
+      ]
+    }).toArray()
+
+    // Convert ObjectId fields to strings for client convenience
+    const out = historyDocs.map(h => ({
+      _id: h._id.toString(),
+      title: h.title,
+      first: h.first ? h.first.toString() : null,
+      second: h.second ? h.second.toString() : null,
+      third: h.third ? h.third.toString() : null,
+      fourth: h.fourth ? h.fourth.toString() : null,
+      fifth: h.fifth ? h.fifth.toString() : null,
+      createdAt: h.createdAt || null
+    }))
+
+    return res.json(out)
+  } catch (err) {
+    console.error('viewHistory error', err)
+    return res.status(500).json({ error: 'Internal server error' })
   }
-  res.json(animalHistory)
+})
+
+app.post("/animalInHistory", authenticateToken, async (req, res) => {
+  const record = req.body.record
+  const animals = await animalsCollection.find({username: req.user.username}).toArray()
+  let rank = null
+  let targetAnimal = null
+  for (let animal of animals) {
+    if(animal._id.toString() == record.first){
+      targetAnimal = animal
+      rank = 1
+    } else if (animal._id.toString() == record.second){
+      targetAnimal = animal
+      rank = 2
+    } else if (animal._id.toString() == record.third){
+      targetAnimal = animal
+      rank = 3
+    } else if (animal._id.toString() == record.fourth){
+      targetAnimal = animal
+      rank = 4
+    } else if (animal._id.toString() == record.fifth){
+      targetAnimal = animal
+      rank = 5
+    }
+
+    return res.json({animalName: targetAnimal.name, rank: rank} )
+  }
+
 })
 
 app.get("/animals", authenticateToken, async (req, res) => {
