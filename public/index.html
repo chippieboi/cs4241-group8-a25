@@ -12,39 +12,6 @@
 </head>
 
 <body>
-    <form id="logoutForm" action="/logout" method="POST">
-        <button type="submit">Logout</button>
-    </form>
-    <h2>Your Animals</h2>
-    <table id="animalsTable">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Speed</th>
-                <th>Stamina</th>
-                <th>Agility</th>
-                <th>Dexterity</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody id="animalList"></tbody>
-    </table>
-
-    <h3>Create New Animal</h3>
-    <div>Total points available: <span id="pointTotal">30</span>. Remaining: <span id="remainingPoints">30</span></div>
-    <form id="createForm" onsubmit="createAnimal(event)">
-        <input id="animalName" type="text" name="name" placeholder="Name" required>
-        <select id="animalType" name="type">
-            <option>Horse</option>
-            <option>Cat</option>
-            <option>Dog</option>
-            <option>Kangaroo</option>
-        </select>
-
-        <div>
-            <div class="stat-row">
-                <label>Speed</label>
-                <input id="speed" type="number" name="speed" min="1" max="30" placeholder="0" required>
     <div class = "container">
         <div class="header">
             <div id="heading-grid">
@@ -108,7 +75,7 @@
                     <table id="createTable" style="padding: 5px 2px 5px 2px; border:none;">
                         <tbody>
                             <td style="width: 50%; border: none;"><div style="padding: 20px;">
-                            <div style="padding-bottom: 5px;">Total points available: <span id="pointTotal">30</span>. Remaining: <span id="pointsLeft">30</span></div>
+                            <div style="padding-bottom: 5px;">Total points available: <span id="pointTotal">30</span>. Remaining: <span id="remainingPoints">30</span></div>
                             <form id="createForm" onsubmit="createAnimal(event)">
                                 <input name="name" id="animalName" style="width:55%;" placeholder="Name" class="createButton" required>
                                 <select name="type" id="animalType" class="createButton">
@@ -117,22 +84,22 @@
                                     <option value="dog">Dog</option>
                                     <option value="cat">Cat</option>
                                 </select>
-                                <br><br><label for="speed">Speed: </label><div id="spVal" class="valueBox">15</div>
+                                <br><br><label for="speed">Speed: </label><div id="spVal" class="valueBox">0</div>
                                 <div class="stat-row">
-                                    <input id="speed" type="range" name="speed" min="0" max="30" value="15" class="slider" required>
+                                    <input id="speed" type="range" name="speed" min="0" max="30" value="0" class="slider" required>
                                 </div>
-                                <label for="stamina">Stamina: </label><div id="stVal" class="valueBox">15</div>
+                                <label for="stamina">Stamina: </label><div id="stVal" class="valueBox">0</div>
                                 <div class="stat-row">
-                                    <input id="stamina" type="range" name="stamina" min="0" max="30" value="15" class="slider" required>
+                                    <input id="stamina" type="range" name="stamina" min="0" max="30" value="0" class="slider" required>
                                 </div>
-                                <label for="agility">Agility: </label><div id="agVal" class="valueBox">15</div>
+                                <label for="agility">Agility: </label><div id="agVal" class="valueBox">0</div>
                                 <div class="stat-row">
-                                    <input id="agility" type="range" name="agility" min="0" max="30" value="15" class="slider"  required>
+                                    <input id="agility" type="range" name="agility" min="0" max="30" value="0" class="slider"  required>
                                     
                                 </div>
-                                <label for="dexterity">Dexterity: </label><div id="dxVal" class="valueBox">15</div>
+                                <label for="dexterity">Dexterity: </label><div id="dxVal" class="valueBox">0</div>
                                 <div class="stat-row">
-                                    <input id="dexterity" type="range" name="strength" min="0" max="30" value="15" class="slider" required>
+                                    <input id="dexterity" type="range" name="strength" min="0" max="30" value="0" class="slider" required>
                                     
                                 </div>
                                 <div style="padding: 5px">
