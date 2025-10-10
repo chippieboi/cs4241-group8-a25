@@ -2,11 +2,13 @@
 <html lang="en">
 
 <head>
-    <title>User Login</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Animal Racer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Pixelify+Sans:wght@400..700&display=swap" rel="stylesheet">
     <meta charset="utf-8">
     <link rel="icon" href="data:;base64,iVBORw0KGgo=">
-    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="main.css">
 </head>
 
 <body>
@@ -43,65 +45,118 @@
             <div class="stat-row">
                 <label>Speed</label>
                 <input id="speed" type="number" name="speed" min="1" max="30" placeholder="0" required>
+    <div class = "container">
+        <div class="header">
+            <div id="heading-grid">
+                <div class="newArea"><p style="font-family: 'Pixelify Sans', sans-serif;">&nbsp;zoo <br> &ensp; racerz</p></div>
+                <div class="myArea" style="background-color: #749951;"><img src="cat.png">
+                    <img src="dog.png"><img src="kangaroo.png"><img src="horse.png"></div>
+                <div class="newArea"><p style="font-family: 'Pixelify Sans', sans-serif;">&nbsp;zoo <br> &ensp; racerz</p></div>
             </div>
-            <div class="stat-row">
-                <label>Stamina</label>
-                <input id="stamina" type="number" name="stamina" min="1" max="30" placeholder="0" required>
+        </div>
+        <div class="left">
+            <div class="banner"><center><h2>MENU</h2></center></div>
+            <form id="logoutForm" action="/logout" method="POST">
+            <br><center><button class="small-button" type="submit">Logout</button></center>
+            </form><br>
+            <div class="banner"><center><h2>RULES</h2></center></div>
+            <p>Create up to three animals to race against other users! Each animal has stats that add up to a maximum of 30 points.</p><br><br>
+            <div class="banner"><center><h2 style="font-size: 24px; padding-top: 10px;">LEADERBOARD</h1></center></div>
+            <table id="leaderboard-entries">
+                <thead><tr><th>Name</th><th>Type</th><th>Wins</th></tr></thead>
+            </table>
+        </div>
+        <div class ="middle">
+            <div class="banner"><center><h2>YOUR ANIMALS</h2></center></div>
+            <div id="myAnimals">
+                <div class="slot1" id="icon1"><img class="emptyIcons" src="empty.png"></div>
+                <div class="desc1" id="slot1">
+                    <div class="overlay" id="overlay1"><br><h2 class="createAnimal">Create a New Animal!</h2><br>
+                    <button class="createButton" id="btn1"><p>Create Animal<br></p></button></div>
+                    
+                </div>
+                <div class="slot2" id="icon2"><img class="emptyIcons" src="empty.png"></div>
+                <div class="desc2" id="slot2">
+                    <div class="overlay" id="overlay2"><br><h2 class="createAnimal">Create a New Animal!</h2><br>
+                    <button class="createButton" id="btn2"><p>Create Animal<br></p></button></div>
+                    
+                </div>
+                <div class="slot3" id="icon3"><img class="emptyIcons" src="empty.png"></div>
+                <div class="desc3" id="slot3">
+                    <div class="overlay" id="overlay3"><br><h2 class="createAnimal">Create a New Animal!</h2><br>
+                    <button class="createButton" id="btn3"><p>Create Animal<br></p></button></div>
+                    
+                </div>
             </div>
-            <div class="stat-row">
-                <label>Agility</label>
-                <input id="agility" type="number" name="agility" min="1" max="30" placeholder="0" required>
-            </div>
-            <div class="stat-row">
-                <label>Dexterity</label>
-                <input id="dexterity" type="number" name="strength" min="1" max="30" placeholder="0" required>
-            </div>
-
             <div>
-                <button id="createButton" type="submit">Create Animal</button>
+                <br>
+                <div class="banner"><center><h2>RACE YOUR ANIMAL</h2></center></div><br>
+                <form id="raceForm" onsubmit="startRace(event)">
+                    <select name="animalId" id="raceSelect"></select>
+                    <button type="submit">Start Race</button>
+                </form><br>
+
+                <div class="banner"><center><h2>RACE RESULTS</h2></center></div><br>
+                <table id="resultsTable">
+                    <thead><tr><th>Place</th><th>Name</th><th>Type</th><th>Score</th></tr></thead>
+                    <tbody></tbody>
+                </table><br>
             </div>
-            <div id="createError"></div>
-    </form>
-
-    <h3>Race Your Animal</h3>
-    <form id="raceForm" onsubmit="startRace(event)">
-        <select name="animalId" id="raceSelect"></select>
-        <button type="submit">Start Race</button>
-    </form>
-
-
-    <h2>Race Results</h2>
-    <table id="resultsTable">
-        <thead>
-            <tr>
-                <th>Place</th>
-                <th>Name</th>
-                <th>Type</th>
-                <th>Score</th>
-            </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
-    </div>
-
-    <h2>History</h2>
-    <table id="historyLog">
-        <tbody></tbody>
-    </table>
-
-    <h2>Leaderboard</h2>
-    <table id="leaderboardTable">
-        <thead>
-            <tr>
-                <th>User</th>
-                <th>Gold</th>
-                <th>Silver</th>
-                <th>Bronze</th>
-            </tr>
-        </thead>
-        <tbody id="leaderboard-entries"></tbody>
-    </table>
-    <script src="main.js"></script>
+            <div class="modal" id="createModal">
+                <div class="modal-content" id="modalContent">
+                    <div class="banner"><center><h2>Create New Animal</h2></center></div>
+                    <table id="createTable" style="padding: 5px 2px 5px 2px; border:none;">
+                        <tbody>
+                            <td style="width: 50%; border: none;"><div style="padding: 20px;">
+                            <div style="padding-bottom: 5px;">Total points available: <span id="pointTotal">30</span>. Remaining: <span id="pointsLeft">30</span></div>
+                            <form id="createForm" onsubmit="createAnimal(event)">
+                                <input name="name" id="animalName" style="width:55%;" placeholder="Name" class="createButton" required>
+                                <select name="type" id="animalType" class="createButton">
+                                    <option value="kangaroo">Kangaroo</option>
+                                    <option value="horse">Horse</option>
+                                    <option value="dog">Dog</option>
+                                    <option value="cat">Cat</option>
+                                </select>
+                                <br><br><label for="speed">Speed: </label><div id="spVal" class="valueBox">15</div>
+                                <div class="stat-row">
+                                    <input id="speed" type="range" name="speed" min="0" max="30" value="15" class="slider" required>
+                                </div>
+                                <label for="stamina">Stamina: </label><div id="stVal" class="valueBox">15</div>
+                                <div class="stat-row">
+                                    <input id="stamina" type="range" name="stamina" min="0" max="30" value="15" class="slider" required>
+                                </div>
+                                <label for="agility">Agility: </label><div id="agVal" class="valueBox">15</div>
+                                <div class="stat-row">
+                                    <input id="agility" type="range" name="agility" min="0" max="30" value="15" class="slider"  required>
+                                    
+                                </div>
+                                <label for="dexterity">Dexterity: </label><div id="dxVal" class="valueBox">15</div>
+                                <div class="stat-row">
+                                    <input id="dexterity" type="range" name="strength" min="0" max="30" value="15" class="slider" required>
+                                    
+                                </div>
+                                <div style="padding: 5px">
+                                    <button type="submit" class="createButton">Create Animal</button>
+                                    <button id="cancelCreate" class="createButton">Cancel</button>
+                                </div>
+                                <div id="createError"></div>
+                            </form></div></td>
+                            <td id="theIcon" style="width: 50%; border: none; background-color: #FFEFB7;"><img src="kangaroo.png"></td>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="right">
+            <div class="banner"><center><h2>HISTORY</h2></center></div>
+            <table style="border: 1px, solid, #FFEFB7;" id="historyLog">
+            <tbody></tbody>
+            </table>
+            <script src="main.js"></script>
+        </div>
+        <div class = "footer">
+            <p> Bree, Ethan, Isabel, Michael, Tiffany</p>
+        </div>
+    </div>    
 </body>
-
 </html>

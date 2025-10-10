@@ -1,19 +1,32 @@
 <!DOCTYPE html>
 <head>
     <title>Register</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="main.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Pixelify+Sans:wght@400..700&display=swap" rel="stylesheet">
+    
 </head>
-<body>
-    <div class="register-container">
-        <h2>Register</h2>
+<body style="overflow: hidden;">
+    <div class = "container">
+        <div class="header">
+            <div id="heading-grid">
+                <div class="newArea"><p style="font-family: 'Pixelify Sans', sans-serif;">&nbsp;ZOO <br> &ensp; RACERZ</p></div>
+                <div class="myArea" style="background-color: #749951;"><img src="cat.png">
+                    <img src="dog.png"><img src="kangaroo.png"><img src="horse.png"></div>
+                <div class="newArea"><p style="font-family: 'Pixelify Sans', sans-serif;">&nbsp;ZOO <br> &ensp; RACERZ</p></div>
+            </div>
+        </div>
+    </div>
+    <center><div class="middle" style="height: 390px; width: 60%;">
+        <div class="banner" style="height: 15%;"><h2>Register</h2></div><br><br>
         <form id="registerForm" action="/register" method="POST">
-            <label for="username" name = "username">Username:</label>
-            <input type="text" id="username" name="username" required>
-            <label for="password" name = "password">Password:</label>
-            <input type="password" id="password" name="password" required>
-            <button type="submit">Register</button>
+            <label for="username"><p style="font-weight: 700; font-size: 18px;">Username: </p></label>
+            <input type="text" id="username" name="username" style="width: 30%;" required><br><br><br>
+            <label for="password"><p style="font-weight: 700; font-size: 18px;">Password: </p></label>
+            <input type="password" id="password" name="password" style="width: 30%;" required><br><br><br>
+            <button type="submit" style="width: 30%;">Register</button></center><br><br><br>
         </form>
         <p id="errorMessage" class="error-message"></p>
-    </div>
+    </div></center>
 </body>
-</html>
