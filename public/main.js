@@ -1,4 +1,4 @@
-const API = "http://localhost:3000";
+const API = "https://webware-group8.onrender.com/";
 
 const login = async function (event) {
     event.preventDefault()
