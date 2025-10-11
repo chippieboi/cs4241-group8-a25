@@ -419,7 +419,7 @@ const viewHistory = async function (event) {
 }
 async function loadLeaderboard() {
     try {
-        const response = await fetch(API + "/leaderboard");
+        const response = await fetch("/leaderboard");
         if (!response.ok) throw new Error("Failed to fetch leaderboard")
         const data = await response.json();
 
