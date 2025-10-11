@@ -1,4 +1,4 @@
-const API = "https://webware-group8.onrender.com/";
+const API = "http://localhost:3000";
 
 const login = async function (event) {
     event.preventDefault()
@@ -29,7 +29,7 @@ async function loadAnimals() {
     let numAnimals = animals.length;
 
     let overlays = [document.getElementById("overlay1"), document.getElementById("overlay2"), document.getElementById("overlay3")]
-    for(let i = 3; i < 3; i++){
+    for (let i = 3; i < 3; i++) {
         overlays[i].style.display = 'none';
     }
 
@@ -87,10 +87,10 @@ async function loadAnimals() {
         option.textContent = `${animal.name} (${animal.type})`;
         select.appendChild(option);
     })
-    for (slotCount; slotCount < 3; slotCount++){
+    for (slotCount; slotCount < 3; slotCount++) {
         overlays[slotCount].style.display = 'block';
     }
-    
+
 }
 
 const totalPoints = 30;
@@ -138,7 +138,7 @@ async function createAnimal(event) {
 
     const response = await fetch("/createAnimal", {
         method: "POST",
-        headers: { "Content-Type": "application/json"},
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(animalData),
     });
 
@@ -148,14 +148,14 @@ async function createAnimal(event) {
         form.reset();
         loadAnimals();
         modal.style.display = "none";
-        
+
     } else {
         alert(result.error || "Error creating animal.");
     }
 }
 
 async function editAnimal(id, name, type, speed, stamina, agility, dexterity) {
-    
+
     const newName = prompt("Enter new name:", name) ?? name;
     const newType = prompt("Enter new type:", type) ?? type;
     const newSpeed = parseInt(prompt("Enter new speed:", speed));
@@ -163,7 +163,7 @@ async function editAnimal(id, name, type, speed, stamina, agility, dexterity) {
     const newAgility = parseInt(prompt("Enter new agility", agility));
     const newDexterity = parseInt(prompt("Enter new dexterity", dexterity));
 
-    const animalStats = { name: newName, type: newType, speed: newSpeed, stamina: newStamina, agility: newAgility, dexterity: newDexterity};
+    const animalStats = { name: newName, type: newType, speed: newSpeed, stamina: newStamina, agility: newAgility, dexterity: newDexterity };
     const total = newSpeed + newStamina + newAgility + newDexterity;
     if (total > 30) {
         document.getElementById("createError").innerText = "Total exceeds 30";
@@ -172,7 +172,7 @@ async function editAnimal(id, name, type, speed, stamina, agility, dexterity) {
 
     const res = await fetch(`/editAnimal/${id}`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json"},
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(animalStats)
     });
 
@@ -188,19 +188,20 @@ async function editAnimal(id, name, type, speed, stamina, agility, dexterity) {
 
 
 async function deleteAnimal(id) {
-  if (!confirm("Are you sure you want to delete this animal?")) return;
+    if (!confirm("Are you sure you want to delete this animal?")) return;
 
-  const res = await fetch(`/deleteAnimal/${id}`, {
-    method: "DELETE"});
+    const res = await fetch(`/deleteAnimal/${id}`, {
+        method: "DELETE"
+    });
 
-  const result = await res.json();
-  if (result.success) {
-    loadAnimals();
-    window.location.reload();
-  } else {
-    alert(result.error || "Error deleting animal");
-  }
-  
+    const result = await res.json();
+    if (result.success) {
+        loadAnimals();
+        window.location.reload();
+    } else {
+        alert(result.error || "Error deleting animal");
+    }
+
 }
 
 
@@ -224,20 +225,20 @@ async function startRace(event) {
     const select = document.getElementById("raceSelect");
     const animalId = select.value;
 
-    if(!animalId) {
+    if (!animalId) {
         alert("please select an animal to race!");
         return;
     }
 
-    try{
+    try {
         const res = await fetch("/race", {
-            method:"POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({animalId})
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ animalId })
         });
         const data = await res.json();
 
-        if(!res.ok) {
+        if (!res.ok) {
             alert(data.error || "failed to start race");
             return;
         }
@@ -269,30 +270,30 @@ async function startRace(event) {
     viewHistory();
 }
 
-const viewHistory = async function(event) {
+const viewHistory = async function (event) {
     const response = await fetch("/viewHistory")
 
     const history = await response.json()
     const entries = document.getElementById("historyLog");
-    entries.innerHTML ="";
+    entries.innerHTML = "";
     for (let record of history) {
         let track = 0;
         let ownAnimal = null;
         try {
             const ownRes = await fetch('/animalInHistory', {
-             method: "POST",
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ record })
+                method: "POST",
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ record })
             });
             if (ownRes.ok) {
-            ownAnimal = await ownRes.json();
+                ownAnimal = await ownRes.json();
             } else {
-            console.error('animalInHistory failed', ownRes.status);
+                console.error('animalInHistory failed', ownRes.status);
             }
-} catch (err) {
-  console.error('animalInHistory network error', err);
-}
-        
+        } catch (err) {
+            console.error('animalInHistory network error', err);
+        }
+
         const historyTable = document.createElement("table")
         historyTable.innerHTML = `
         <tr class="main-row" style="cursor:pointer"><th colspan="2">${record.title}</th><th>${ownAnimal.rank}</th></tr>
@@ -303,26 +304,26 @@ const viewHistory = async function(event) {
             <th>animal type</th>
         </tr>
         `
-       
+
         const firstRes = await fetch('/viewAnimal', {
             method: "POST",
             body: JSON.stringify({ animalId: record.first }),
             headers: { 'Content-Type': 'application/json' }
         })
-        if(firstRes.ok){
+        if (firstRes.ok) {
             track++;
-        const first = await firstRes.json()
+            const first = await firstRes.json()
 
-    const firstEntry = document.createElement("tr")
-    firstEntry.className = "detail-row"
-    firstEntry.style.display = 'none'
-        firstEntry.innerHTML = `
+            const firstEntry = document.createElement("tr")
+            firstEntry.className = "detail-row"
+            firstEntry.style.display = 'none'
+            firstEntry.innerHTML = `
         <td>${track}</td>
         <td>${first.username}</td>
         <td>${first.name}</td>
         <td>${first.type}</td>
         `
-        historyTable.appendChild(firstEntry)
+            historyTable.appendChild(firstEntry)
         }
 
         const secondRes = await fetch('/viewAnimal', {
@@ -330,20 +331,20 @@ const viewHistory = async function(event) {
             body: JSON.stringify({ animalId: record.second }),
             headers: { 'Content-Type': 'application/json' }
         })
-        if(secondRes.ok){
+        if (secondRes.ok) {
             track++;
-        const second = await secondRes.json()
+            const second = await secondRes.json()
 
-    const secondEntry = document.createElement("tr")
-    secondEntry.className = "detail-row"
-    secondEntry.style.display = 'none'
-        secondEntry.innerHTML = `
+            const secondEntry = document.createElement("tr")
+            secondEntry.className = "detail-row"
+            secondEntry.style.display = 'none'
+            secondEntry.innerHTML = `
         <td>${track}</td>
         <td>${second.username}</td>
         <td>${second.name}</td>
         <td>${second.type}</td>
         `
-        historyTable.appendChild(secondEntry)
+            historyTable.appendChild(secondEntry)
         }
 
         const thirdRes = await fetch('/viewAnimal', {
@@ -352,20 +353,20 @@ const viewHistory = async function(event) {
             headers: { 'Content-Type': 'application/json' }
         })
 
-        if(thirdRes.ok){
+        if (thirdRes.ok) {
             track++;
-        const third = await thirdRes.json()
+            const third = await thirdRes.json()
 
-    const thirdEntry = document.createElement("tr")
-    thirdEntry.className = "detail-row"
-    thirdEntry.style.display = 'none'
-        thirdEntry.innerHTML = `
+            const thirdEntry = document.createElement("tr")
+            thirdEntry.className = "detail-row"
+            thirdEntry.style.display = 'none'
+            thirdEntry.innerHTML = `
         <td>${track}</td>
         <td>${third.username}</td>
         <td>${third.name}</td>
         <td>${third.type}</td>
         `
-        historyTable.appendChild(thirdEntry)
+            historyTable.appendChild(thirdEntry)
         }
 
         const fourthRes = await fetch('/viewAnimal', {
@@ -373,20 +374,20 @@ const viewHistory = async function(event) {
             body: JSON.stringify({ animalId: record.fourth }),
             headers: { 'Content-Type': 'application/json' }
         })
-        if(fourthRes.ok){
+        if (fourthRes.ok) {
             track++;
-        const fourth = await fourthRes.json()
+            const fourth = await fourthRes.json()
 
-    const fourthEntry = document.createElement("tr")
-    fourthEntry.className = "detail-row"
-    fourthEntry.style.display = 'none'
-        fourthEntry.innerHTML = `
+            const fourthEntry = document.createElement("tr")
+            fourthEntry.className = "detail-row"
+            fourthEntry.style.display = 'none'
+            fourthEntry.innerHTML = `
         <td>${track}</td>
         <td>${fourth.username}</td>
         <td>${fourth.name}</td>
         <td>${fourth.type}</td>
         `
-        historyTable.appendChild(fourthEntry)
+            historyTable.appendChild(fourthEntry)
         }
 
         const fifthRes = await fetch('/viewAnimal', {
@@ -395,25 +396,25 @@ const viewHistory = async function(event) {
             headers: { 'Content-Type': 'application/json' }
         })
 
-        if(fifthRes.ok){
+        if (fifthRes.ok) {
             track++;
-        const fifth = await fifthRes.json()
+            const fifth = await fifthRes.json()
 
-    const fifthEntry = document.createElement("tr")
-    fifthEntry.className = "detail-row"
-    fifthEntry.style.display = 'none'
-        fifthEntry.innerHTML = `
+            const fifthEntry = document.createElement("tr")
+            fifthEntry.className = "detail-row"
+            fifthEntry.style.display = 'none'
+            fifthEntry.innerHTML = `
         <td>${track}</td>
         <td>${fifth.username}</td>
         <td>${fifth.name}</td>
         <td>${fifth.type}</td>
         `
-        historyTable.appendChild(fifthEntry)
+            historyTable.appendChild(fifthEntry)
         }
 
 
-        
-     entries.appendChild(historyTable)
+
+        entries.appendChild(historyTable)
     }
 }
 async function loadLeaderboard() {
@@ -451,8 +452,8 @@ window.onload = function () {
     var options = document.getElementById("animalType")
     var icon = document.getElementById("theIcon")
     var createButton = document.getElementById("createNew")
-    
-    options.oninput = function(){
+
+    options.oninput = function () {
         var pick = options.value
         switch (pick) {
             case "kangaroo":
@@ -471,29 +472,29 @@ window.onload = function () {
                 break;
         }
     }
-    btn1.onclick = function(){
+    btn1.onclick = function () {
         modal.style.display = 'block';
     }
-    btn2.onclick = function(){
+    btn2.onclick = function () {
         modal.style.display = 'block';
     }
-    btn3.onclick = function(){
+    btn3.onclick = function () {
         modal.style.display = 'block';
     }
-    cancelBtn.onclick = function(){
+    cancelBtn.onclick = function () {
         modal.style.display = "none";
     }
 
-    for (let i = 0; i < sliders.length; i++){
-        sliders[i].oninput = function(){
+    for (let i = 0; i < sliders.length; i++) {
+        sliders[i].oninput = function () {
             values[i].innerHTML = this.value;
         }
     }
-    
-    createButton.onclick = function(){
-        for (let i = 0; i < sliders.length; i++){
+
+    createButton.onclick = function () {
+        for (let i = 0; i < sliders.length; i++) {
             values[i].innerHTML = 0;
-    }
+        }
     }
 
     // document.getElementById("credentials").addEventListener("submit", login)
@@ -505,7 +506,7 @@ window.onload = function () {
 
 statInputs.forEach(input => {
     input.addEventListener("input", recalcPoints);
-}); 
+});
 
 // Delegated handler: toggle detail rows when a main-row is clicked
 document.getElementById('historyLog').addEventListener('click', (e) => {
